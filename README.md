@@ -55,70 +55,7 @@ Il consiste en une application écrite en java nommée ...
 
 <!-- GETTING STARTED -->
 ## Getting Started
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-ff
 
-f
-ff
-
-f
-f
-f
-f
-
-d
-
-d
-
-d
-
-d
-
-d
-
-d
-
-d
-
-d
-
-
-d
-
-d
-
-d
-
-
-d
-
-
-d
-
-d
-
-
-d
-d
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- PREREQUISITES -->
