@@ -4,8 +4,12 @@
 # Ignore Gradle build output directory
 build
 
-#ignore Eclipse build directory
+# Ignore Eclipse project files/directories
 bin 
+.project
+.classpath
+.settings
 
 # Ignore vscode cache directory
 .vscode
+
