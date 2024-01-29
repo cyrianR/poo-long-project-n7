@@ -20,7 +20,9 @@ jobs:
   build:
     name: gradle build
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./work
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
@@ -38,4 +40,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Test report
-        path: build/reports/tests/test
+        path: work/build/reports/tests/test
