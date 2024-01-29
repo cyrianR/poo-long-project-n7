@@ -9,10 +9,10 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Nom de projet</h3>
+  <h3 align="center">Project name</h3>
 
   <p align="center">
-    Courte description de projet
+    Little description
     <br />
     <a href=""><strong>Documentation</strong></a>
     <br />
@@ -45,13 +45,17 @@
 <!-- ABOUT THE PROJECT -->
 ## About the project
 
-Ce projet est le projet long de l'unité d'enseignement Technologie Objet réalisé à l'ENSEEIHT en équipe de 8.
-Il consiste en une application écrite en java nommée ...
+This project is a long term project in team of 8 people conducted in the context of the POO courses at ENSEEIHT Engineering School in Toulouse, France. Its goal is to create a Java project with a graphical interface in order to put into practice our learnings.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- BUILT WITH -->
 ### Built With
+
+Gradle 5.0  
+Java JDK 11  
+Junit 4
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -63,15 +67,46 @@ Il consiste en une application écrite en java nommée ...
 <!-- PREREQUISITES -->
 ### Prerequisites
 
+Java JDK 11  
+Eclipse or VSCode, for gradle 5.0 tools
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- INSTALLATION -->
 ### Installation
 
+In order to use gradle correctly, follow the steps bellow corresponding to your IDE. 
+
+#### For Eclipse users
+```
+# Clone the repo
+git clone git@github.com:cyrianR/poo-long-project-n7.git  
+
+# Open Eclipse
+
+# Import the repo as a gradle project (specifically a gradle project, not any project import)
+
+# Now you can code and build with gradle locally !
+```
+
+#### For VSCode users
+
+
+#### For command line users
+
+
+ 
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE -->
 ## Usage
+
+#### Development
+
+For Eclipse and VSCode users, use the integrated gradle tools to build, test and run the project.  
+
+#### Application
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
