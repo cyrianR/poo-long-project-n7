@@ -1,5 +1,7 @@
 <a name="readme-top"></a>
 
+[![Java CI with Gradle](https://github.com/cyrianR/poo-long-project-n7/actions/workflows/gradle.yml/badge.svg)](https://github.com/cyrianR/poo-long-project-n7/actions/workflows/gradle.yml)
+
 <!-- PROJECT TITLE -->
 <br />
 <div align="center">
