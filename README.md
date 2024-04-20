@@ -113,4 +113,12 @@ For Eclipse and VSCode users, use the integrated gradle tools to build, test and
 <!-- AUTHORS -->
 ## Authors
 
+Truong Nell  
+Mostfa Sami  
+Le Nulzec Leandre  
+Gauthier Julien  
+Cebula Baptiste  
+Barilly Victor  
+Ragot Cyrian
+
 
