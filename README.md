@@ -85,6 +85,8 @@ git clone git@github.com:cyrianR/poo-long-project-n7.git
 # Open Eclipse
 
 # Import the repo as a gradle project (specifically a gradle project, not any project import)
+- select the File>Import>Gradle>Gradle Project menu entry for this
+- click next and add the git repository as the root directory
 
 # Now you can code and build with gradle locally !
 ```
