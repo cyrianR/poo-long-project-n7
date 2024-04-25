@@ -1,16 +1,31 @@
 package poolongprojectn7;
 
 import javafx.application.Application;
-import javafx.stage.*;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class App extends Application{
-    
+public class App extends Application {
+
     public static void main(String[] args) {
-        launch(args);
+        launch(args); // launches application
     }
 
-    public void start(Stage stage) {
-        PianoRoll p = new PianoRoll();
-        p.start(stage);
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        // NB : Stage = Window
+        primaryStage.setTitle("N7 STUDIO");
+        primaryStage.setOnCloseRequest(event -> {
+            event.consume();
+            closeStage(primaryStage);
+        });
+
+        // NB : Scene = content of the window
+        Scene scene = new Scene(new appController().getView(), 300, 250);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void closeStage(Stage stage) {
+        stage.close();
     }
 }
