@@ -9,13 +9,14 @@ public class AppView extends VBox {
     public AppView(AppModel model, Runnable handler) {
 
         // Creating toolbar
-        ToolBar toolBar = new ToolBar();
-        Button button = new Button("Test");
-        toolBar.getItems().add(button);
-        Button button2 = new Button("Button 2");
-        toolBar.getItems().add(button2);
+        ToolBar ToolBar = new ToolBar();
+        Button Button = new Button("Test");
+        ToolBar.getItems().add(Button);
+        Button Button2 = new Button("Button 2");
+        ToolBar.getItems().add(Button2);
+        PianoRoll Piano = new PianoRoll();
 
-        VBox vBox = new VBox(toolBar);
+        VBox vBox = new VBox(ToolBar, Piano);
 
         getChildren().addAll(vBox);
     }
