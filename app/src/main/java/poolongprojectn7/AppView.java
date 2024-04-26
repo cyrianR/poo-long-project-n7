@@ -6,7 +6,7 @@ import javafx.scene.control.ToolBar;
 
 public class AppView extends VBox {
 
-    public appView(appModel model, Runnable handler) {
+    public AppView(AppModel model, Runnable handler) {
 
         // Creating toolbar
         ToolBar toolBar = new ToolBar();
