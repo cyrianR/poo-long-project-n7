@@ -20,7 +20,7 @@ public class App extends Application {
         });
 
         // NB : Scene = content of the window
-        Scene scene = new Scene(new appController().getView(), 300, 250);
+        Scene scene = new Scene(new AppController().getView(), 300, 250);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

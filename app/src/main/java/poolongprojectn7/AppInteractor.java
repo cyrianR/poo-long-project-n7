@@ -2,9 +2,9 @@ package poolongprojectn7;
 
 public class AppInteractor {
     
-    appModel viewModel;
+    AppModel viewModel;
     
-    public appInteractor(appModel viewModel) {
+    public AppInteractor(AppModel viewModel) {
         this.viewModel = viewModel;
         // TODO : finish
     }

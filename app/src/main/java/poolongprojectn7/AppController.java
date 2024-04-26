@@ -6,10 +6,10 @@ public class AppController {
 
     private final Region view;
 
-    public appController() {
-        appModel viewModel = new appModel();
-        appInteractor interactor = new appInteractor(viewModel);
-        view = new appView(viewModel, interactor::handler);
+    public AppController() {
+        AppModel viewModel = new AppModel();
+        AppInteractor interactor = new AppInteractor(viewModel);
+        view = new AppView(viewModel, interactor::handler);
     }
 
     // Accessors :
