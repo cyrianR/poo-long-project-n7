@@ -2,7 +2,7 @@ package poolongprojectn7;
 
 import javafx.scene.layout.Region;
 
-public class appController {
+public class AppController {
 
     private final Region view;
 

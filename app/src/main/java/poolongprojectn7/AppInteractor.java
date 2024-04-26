@@ -1,6 +1,6 @@
 package poolongprojectn7;
 
-public class appInteractor {
+public class AppInteractor {
     
     appModel viewModel;
     

@@ -4,7 +4,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 
-public class appView extends VBox {
+public class AppView extends VBox {
 
     public appView(appModel model, Runnable handler) {
 
