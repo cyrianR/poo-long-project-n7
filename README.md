@@ -52,7 +52,7 @@ This project is a long term project in team of 8 people conducted in the context
 <!-- BUILT WITH -->
 ### Built With
 
-Gradle 5.0  
+Gradle 5.6
 Java JDK 11  
 Junit 4
 
@@ -68,14 +68,15 @@ Junit 4
 ### Prerequisites
 
 Java JDK 11  
-Eclipse or VSCode, for gradle 5.0 tools
+Eclipse or VSCode (for gradle tools mostly)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- INSTALLATION -->
 ### Installation
 
-In order to use gradle correctly, follow the steps bellow corresponding to your IDE. 
+No need to install gradle on your poersonnal computer. We use gradle wrapper for consistent versioning and ease of use.
+In order to use gradle efficiently, follow the steps bellow corresponding to your IDE. 
 
 #### For Eclipse users
 ```
@@ -92,9 +93,18 @@ git clone git@github.com:cyrianR/poo-long-project-n7.git
 ```
 
 #### For VSCode users
+```
+# Download the RedHat extension pack for java
 
+# Download the gradle extension
 
-#### For command line users
+# Download the Junit tests extension
+```
+#### For Vim users
+
+```
+If you use Vim, you certainly don't need my help.
+```
 
 
  
@@ -106,9 +116,14 @@ git clone git@github.com:cyrianR/poo-long-project-n7.git
 
 #### Development
 
-For Eclipse and VSCode users, use the integrated gradle tools to build, test and run the project.  
+For Eclipse and VSCode users, use the integrated gradle tools to build, test and run the project.
+Never compile or launch tests yourself without gradle, it's gradle purpose !
+
+You can use gradlew commands directly if you do not want to use Eclipse or VSCode.
 
 #### Application
+
+User manual will be available at the end of the project. Coming soon...
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
