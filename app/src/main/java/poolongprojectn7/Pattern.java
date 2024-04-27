@@ -43,7 +43,7 @@ public class Pattern {
 
         // MidiMessage for note-on and note-off event
         MidiMessage noteOnMessage = new ShortMessage(ShortMessage.NOTE_ON, CHANNEL, midiNote, velocity);
-        MidiMessage noteOffMessage = new ShortMessage(ShortMessage.NOTE_OFF, CHANNEL, midiNote);
+        MidiMessage noteOffMessage = new ShortMessage(ShortMessage.NOTE_OFF, CHANNEL, midiNote, 0);
 
         // MidiEvent for note-on and note-off messages
         MidiEvent noteOnEvent = new MidiEvent(noteOnMessage, tickStart);
