@@ -15,9 +15,10 @@ public class Note {
     @SuppressWarnings("unused")
     private int noteOffVelocity;
 
-    public Note(int octave, int noteIndex, long durationTicks) {
+    public Note(int octave, int noteIndex, int velocity, long durationTicks) {
         this.octave = octave;
         this.noteIndex = noteIndex;
+        this.velocity = velocity;
         this.durationTicks = durationTicks;
         setMidiNoteNumber(octave, noteIndex);
     }
