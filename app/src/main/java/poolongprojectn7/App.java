@@ -11,7 +11,7 @@ public class App {
         Note note = new Note(5, 0, 100, 1000);
         Pattern pattern = new Pattern(null);
         try {
-            pattern.addNote(note, 0);
+            pattern.addNote(note, 1200);
             Sequencer sequencer = MidiSystem.getSequencer();
             sequencer.open();
             sequencer.setSequence(pattern.getSequence());
