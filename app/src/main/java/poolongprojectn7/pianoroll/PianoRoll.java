@@ -1,4 +1,4 @@
-package poolongprojectn7;
+package poolongprojectn7.pianoroll;
 
 import javafx.geometry.*;
 
