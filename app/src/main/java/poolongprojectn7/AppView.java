@@ -1,6 +1,7 @@
 package poolongprojectn7;
 
 import javafx.scene.layout.VBox;
+import poolongprojectn7.pianoroll.PianoRoll;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 
