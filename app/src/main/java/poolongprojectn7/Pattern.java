@@ -58,6 +58,10 @@ public class Pattern {
         updatePatternLength();
     }
 
+    public void removeNote(Note note) {
+        
+    }
+
     public void savePattern(String path) throws IOException {
         MidiSystem.write(sequence, 1, new java.io.File(path));
     }
