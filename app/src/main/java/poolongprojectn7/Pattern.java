@@ -58,8 +58,33 @@ public class Pattern {
         updatePatternLength();
     }
 
-    public void removeNote(Note note) {
+    public void removeNote(Note note, long tickStart) throws InvalidMidiDataException {
+        int midiNote = note.getMidiNoteNumber();
+        long duration = note.getDurationTicks();
         
+        Track noteTrack = this.sequenceTracks[midiNote];
+
+        // browse through the events of the track associated to the note
+        for (int i = 0; i < noteTrack.size(); i++) {
+            MidiEvent event = noteTrack.get(i);
+            MidiMessage message = event.getMessage();
+            if (message instanceof ShortMessage) {
+                ShortMessage shortMessage = (ShortMessage) message;
+                if (shortMessage.getData1() == midiNote
+                        && event.getTick() == tickStart
+                        && shortMessage.getCommand() == ShortMessage.NOTE_ON) {
+                    // remove note-on event
+                    this.sequenceTracks[midiNote].remove(event);
+                } else if (shortMessage.getData1() == midiNote
+                        && event.getTick() == tickStart + duration
+                        && shortMessage.getCommand() == ShortMessage.NOTE_OFF) {
+                    // remove note-off event
+                    this.sequenceTracks[midiNote].remove(event);
+                }
+            }
+        }
+
+        updatePatternLength();
     }
 
     public void savePattern(String path) throws IOException {
