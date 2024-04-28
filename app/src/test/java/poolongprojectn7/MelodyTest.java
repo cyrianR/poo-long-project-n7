@@ -84,7 +84,7 @@ class MelodyTest {
             // Save the pattern
             pattern.savePattern("/home/vic_pabo/Documents/test.mid");
 
-        } catch (InvalidMidiDataException | IOException e) {
+        } catch (InvalidNoteException | IOException e) {
             e.printStackTrace();
         }
     }
