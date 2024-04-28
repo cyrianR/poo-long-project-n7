@@ -8,14 +8,12 @@ public class Pattern {
     private final int TICK_RESOLUTION = 300;
     private final int CHANNEL = 0;
 
-    private Instrument instrument;
     private Sequence sequence;
     private Track[] sequenceTracks = new Track[NUM_TRACKS];
     /* Total length of the pattern, expressed in MIDI ticks. */
     private long patternLength = 0;
 
-    public Pattern(Instrument instrument) {
-        this.instrument = instrument;
+    public Pattern() {
         this.sequence = initSequence();
     }
 
@@ -66,14 +64,6 @@ public class Pattern {
                 }
             }
         }
-    }
-
-    public Instrument getInstrument() {
-        return this.instrument;
-    }
-
-    public void setInstrument(Instrument instrument) {
-        this.instrument = instrument;
     }
 
     public Sequence getSequence() {
