@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PatternTest {
 
     @Test
-    public void testConstructorAndGetters() {
+    public void testConstructorAndGetters() throws InvalidMidiDataException {
         Pattern pattern = new Pattern();
         assertNotNull(pattern.getSequence());
         assertEquals(0, pattern.getPatternLength());
