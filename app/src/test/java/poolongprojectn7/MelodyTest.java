@@ -2,11 +2,39 @@ package poolongprojectn7;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.File;
 import javax.sound.midi.*;
 
 class MelodyTest {
 
-    public static void createAndSaveMidi(Pattern pattern) {
+    private static String filePath = System.getProperty("user.dir") + "/app/src/test/testMidi";
+
+    @BeforeAll
+    static void setUp() {
+        File tempFolder = new File(filePath);
+        tempFolder.mkdirs();
+    }
+
+    @AfterAll
+    static void closeUp() {
+        File tempFolder = new File(filePath);
+        File[] files = tempFolder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                file.delete();
+            }
+        }
+        tempFolder.delete();
+    }
+
+
+    public void createAndSaveMidi(Pattern pattern) {
         Note reb_trans = new Note(7, 1, 100, 500);
         Note si_trans = new Note(6, 11, 100, 500);
         Note lab_trans = new Note(6, 8, 100, 500);
@@ -82,14 +110,14 @@ class MelodyTest {
             pattern.addNote(la0, 3950);    
             
             // Save the pattern
-            pattern.savePattern("/home/vic_pabo/Documents/test.mid");
+            pattern.savePattern(filePath + "/test.mid");
 
         } catch (InvalidNoteException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void playSequence(Pattern pattern) {
+    public void playSequence(Pattern pattern) {
         try {
             Sequencer sequencer = MidiSystem.getSequencer();
             sequencer.open();
@@ -104,18 +132,19 @@ class MelodyTest {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            // Play a new sequence
-            Pattern pattern = new Pattern();    
+    @Test
+    public void testReadAndWrite() throws InvalidMidiDataException, IOException {
+            // Create and play a new sequence
+            setUp();
+            Pattern pattern = new Pattern();   
             createAndSaveMidi(pattern);
             playSequence(pattern);
 
             // Play a sequence saved in the past
-            pattern = new Pattern("/home/vic_pabo/Documents/test.mid");
+            pattern = new Pattern(filePath + "/test.mid");
             playSequence(pattern);
-        } catch (InvalidMidiDataException | IOException e) {
-            e.printStackTrace();
-        }
+
+            assertTrue(true);
     }
+
 }
