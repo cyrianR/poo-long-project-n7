@@ -1,5 +1,7 @@
 package poolongprojectn7;
 
+import java.io.IOException;
+
 import javax.sound.midi.*;
 
 public class Pattern {
@@ -13,19 +15,21 @@ public class Pattern {
     /* Total length of the pattern, expressed in MIDI ticks. */
     private long patternLength = 0;
 
-    public Pattern() {
+    public Pattern() throws InvalidMidiDataException {
         this.sequence = initSequence();
     }
 
-    private Sequence initSequence() {
+    public Pattern(String path) throws InvalidMidiDataException, IOException {
+        this.sequence = MidiSystem.getSequence(new java.io.File(path));
+        this.sequenceTracks = this.sequence.getTracks(); 
+    }
+
+    private Sequence initSequence() throws InvalidMidiDataException {
         Sequence sequence = null;
-        try {
-            sequence = new Sequence(Sequence.PPQ, TICK_RESOLUTION);
-        } catch (InvalidMidiDataException e) {
-            e.printStackTrace();
-        }
+        sequence = new Sequence(Sequence.PPQ, TICK_RESOLUTION);
 
         // Adding a track for each musical note present in the NUM_OCTAVE octaves.
+        // @TODO : optimisation
         for (int i = 0; i < NUM_TRACKS; i++) {
             sequenceTracks[i] = sequence.createTrack();
         }
@@ -54,6 +58,13 @@ public class Pattern {
         updatePatternLength();
     }
 
+    public void savePattern(String path) throws IOException {
+        MidiSystem.write(sequence, 1, new java.io.File(path));
+    }
+
+    /*
+     * @TODO : optimisation
+     */
     private void updatePatternLength() {
         for (Track track : this.sequenceTracks) {
             for (int i = 0; i < track.size(); i++) {
