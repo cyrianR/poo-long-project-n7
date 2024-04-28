@@ -13,6 +13,7 @@ import javax.sound.midi.*;
 
 class MelodyTest {
 
+    // The file path where the temporary MIDI file will be stored
     private static String filePath = System.getProperty("user.dir") + "/app/src/test/testMidi";
 
     @BeforeAll
@@ -33,7 +34,10 @@ class MelodyTest {
         tempFolder.delete();
     }
 
-
+    /**
+     * Write and save a melody in a given pattern.
+     * @param pattern the pattern to modify
+     */
     public void createAndSaveMidi(Pattern pattern) {
         Note reb_trans = new Note(7, 1, 100, 500);
         Note si_trans = new Note(6, 11, 100, 500);
@@ -117,6 +121,10 @@ class MelodyTest {
         }
     }
 
+    /**
+     * Play the sequence of a given pattern.
+     * @param pattern the pattern
+     */
     public void playSequence(Pattern pattern) {
         try {
             Sequencer sequencer = MidiSystem.getSequencer();
