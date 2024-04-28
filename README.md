@@ -47,7 +47,6 @@
 
 This project is a long term project in team of 8 people conducted in the context of the POO courses at ENSEEIHT Engineering School in Toulouse, France. Its goal is to create a Java project with a graphical interface in order to put into practice our learnings.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- BUILT WITH -->
 ### Built With
@@ -62,15 +61,12 @@ Junit 4
 <!-- GETTING STARTED -->
 ## Getting Started
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- PREREQUISITES -->
 ### Prerequisites
 
 Java JDK 11  
 Eclipse or VSCode (for gradle tools mostly)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- INSTALLATION -->
 ### Installation
@@ -119,7 +115,20 @@ If you use Vim, you certainly don't need my help.
 For Eclipse and VSCode users, use the integrated gradle tools to build, test and run the project.
 Never compile or launch tests yourself without gradle, it's gradle purpose !
 
-You can use gradlew commands directly if you do not want to use Eclipse or VSCode.
+You can use gradlew commands directly if you do not want to use Eclipse or VSCode integrated tools :
+
+- build project only : ```./gradlew build```
+- build and run project : ```./gradlew run```
+- create javadoc : ```./gradlew javadoc```
+- help for gradle commands : ```./gradlew tasks```
+
+Gradle computes many files, some of them may be usefull :  
+
+- ```app/build/classes``` : compiled files
+- ```app/build/doc``` : javadoc documentation, you can open index.html to consult it
+- ```app/build/libs``` : the project computed as a .jar file
+- ```app/build/reports``` : tests results
+
 
 #### Application
 
