@@ -27,17 +27,17 @@ class PatternTest {
     }
 
     @Test
-    public void testAddNoteModifiesPatternLength1() throws InvalidMidiDataException {
+    public void testAddNoteModifiesPatternLength1() throws InvalidMidiDataException, InvalidNoteException {
         Pattern pattern = new Pattern();
         Note note1 = new Note(3, 7, 100, 500);
         Note note2 = new Note(3, 7, 100, 500);
         pattern.addNote(note1, 20);
         pattern.addNote(note2, 120);
         assertEquals(620, pattern.getPatternLength());
-    }    
+    }
 
     @Test
-    public void testAddNoteModifiesPatternLength2() throws InvalidMidiDataException {
+    public void testAddNoteModifiesPatternLength2() throws InvalidMidiDataException, InvalidNoteException {
         Pattern pattern = new Pattern();
         Note note1 = new Note(3, 7, 100, 500);
         Note note2 = new Note(3, 7, 100, 390);
@@ -47,7 +47,7 @@ class PatternTest {
     }  
 
     @Test
-    public void testAddNoteModifiesPatternLength3() throws InvalidMidiDataException {
+    public void testAddNoteModifiesPatternLength3() throws InvalidMidiDataException, InvalidNoteException {
         Pattern pattern = new Pattern();
         Note note1 = new Note(3, 7, 100, 500);
         Note note2 = new Note(3, 7, 100, 500);
@@ -57,7 +57,7 @@ class PatternTest {
     }  
 
     @Test
-    public void testAddNoteModifiesPatternLength4() throws InvalidMidiDataException {
+    public void testAddNoteModifiesPatternLength4() throws InvalidMidiDataException, InvalidNoteException {
         Pattern pattern = new Pattern();
         Note note1 = new Note(3, 7, 100, 500);
         Note note2 = new Note(3, 7, 100, 390);
@@ -67,7 +67,7 @@ class PatternTest {
     }  
 
     @Test
-    public void testAddNoteInTrack1() throws InvalidMidiDataException {
+    public void testAddNoteInTrack1() throws InvalidMidiDataException, InvalidNoteException {
         Pattern pattern = new Pattern();
         Note note = new Note(3, 7, 100, 500);
         int noteTickStart = 20;
@@ -90,7 +90,7 @@ class PatternTest {
     }
 
     @Test
-    public void testAddNoteInTrack2() throws InvalidMidiDataException {
+    public void testAddNoteInTrack2() throws InvalidMidiDataException, InvalidNoteException {
         Pattern pattern = new Pattern();
         Note note1 = new Note(3, 7, 100, 500);
         Note note2 = new Note(2, 5, 100, 390);
@@ -131,7 +131,7 @@ class PatternTest {
     }
 
     @Test
-    public void testAddNoteInTrack3() throws InvalidMidiDataException {
+    public void testAddNoteInTrack3() throws InvalidMidiDataException, InvalidNoteException {
         Pattern pattern = new Pattern();
         Note note1 = new Note(3, 7, 100, 500);
         Note note2 = new Note(3, 7, 100, 390);
@@ -162,4 +162,87 @@ class PatternTest {
 
         assertTrue(CorrectEventsFound, "Correct events not found");
     }
+
+    @Test
+    public void testRemoveNoteInTrack1() throws InvalidMidiDataException, InvalidNoteException {
+        Pattern pattern = new Pattern();
+        Note note1 = new Note(3, 7, 100, 500);
+        Note note2 = new Note(3, 7, 100, 390);
+        int note1TickStart = 20;
+        int note2TickStart = 120;
+        pattern.addNote(note1, note1TickStart);
+        pattern.addNote(note2, note2TickStart);
+
+        pattern.removeNote(note1, note1TickStart);
+        Sequence sequence = pattern.getSequence();
+
+        // Same track because the notes have the same height
+        Track track = sequence.getTracks()[note1.getMidiNoteNumber()];
+
+        boolean CorrectEventsFound = false;
+        for (int i = 0; i < track.size(); i++) {
+            MidiEvent event = track.get(i);
+            System.out.print(event.getTick());
+            if ((event.getTick() != note2TickStart)
+                && (event.getTick() != note2.getDurationTicks() + note2TickStart)
+                && (event.getTick() != pattern.getPatternLength())){
+                CorrectEventsFound = false;
+                break;
+            } else {
+                CorrectEventsFound = true;
+            }
+        }
+        assertTrue(CorrectEventsFound, "Event not suppressed");
+    }
+
+    @Test
+    public void testRemoveNoteInTrack2() throws InvalidMidiDataException, InvalidNoteException {
+        Pattern pattern = new Pattern();
+        Note note1 = new Note(3, 7, 100, 500);
+        Note note2 = new Note(3, 7, 100, 390);
+        int note1TickStart = 20;
+        int note2TickStart = 120;
+        pattern.addNote(note1, note1TickStart);
+        pattern.addNote(note2, note2TickStart);
+
+        pattern.removeNote(note1, note1TickStart);
+        pattern.removeNote(note2, note2TickStart);
+
+        assertEquals(0, pattern.getPatternLength());
+    }
+
+    @Test
+    public void testRemoveNoteInTrack3() throws InvalidMidiDataException, InvalidNoteException {
+        Pattern pattern = new Pattern();
+        Note note1 = new Note(3, 7, 100, 500);
+        Note note2 = new Note(3, 7, 100, 390);
+        int note1TickStart = 20;
+        int note2TickStart = 120;
+        pattern.addNote(note1, note1TickStart);
+        pattern.addNote(note2, note2TickStart);
+
+        pattern.removeNote(note1, 600);
+
+        Sequence sequence = pattern.getSequence();
+
+        Track track = sequence.getTracks()[note1.getMidiNoteNumber()];
+
+        boolean CorrectEventsFound = false;
+        for (int i = 0; i < track.size(); i++) {
+            MidiEvent event = track.get(i);
+            System.out.print(event.getTick());
+            if ((event.getTick() != note1TickStart) && (event.getTick() != note2TickStart)
+                        && (event.getTick() != note1.getDurationTicks() + note1TickStart)
+                        && (event.getTick() != note2.getDurationTicks() + note2TickStart)
+                        && (event.getTick() != pattern.getPatternLength())){
+                CorrectEventsFound = false;
+                break;
+            } else {
+                CorrectEventsFound = true;
+            }
+        }
+
+        assertTrue(CorrectEventsFound, "Correct events not found");
+    }
+
 }

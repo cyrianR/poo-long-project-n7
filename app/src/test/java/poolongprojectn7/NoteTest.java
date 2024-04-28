@@ -46,7 +46,7 @@ class NoteTest {
     public void testValidNoteHighOctave1() throws InvalidMidiDataException { // Limit case
         Note note = new Note(11, 7, 100, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
@@ -55,7 +55,7 @@ class NoteTest {
     public void testValidNoteHighOctave2() throws InvalidMidiDataException {
         Note note = new Note(34, 7, 100, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
@@ -64,7 +64,7 @@ class NoteTest {
     public void testValidNoteLowOctave() throws InvalidMidiDataException {
         Note note = new Note(-2, 7, 100, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
@@ -88,7 +88,7 @@ class NoteTest {
     public void testValidNoteHighNoteIndex1() throws InvalidMidiDataException { // Limit case
         Note note = new Note(0, 12, 100, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
@@ -97,7 +97,7 @@ class NoteTest {
     public void testValidNoteHighNoteIndex2() throws InvalidMidiDataException {
         Note note = new Note(0, 68, 100, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
@@ -106,7 +106,7 @@ class NoteTest {
     public void testValidNoteLowNoteIndex() throws InvalidMidiDataException {
         Note note = new Note(0, -1, 100, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
@@ -130,7 +130,7 @@ class NoteTest {
     public void testValidNoteHighMidiNoteNumber1() throws InvalidMidiDataException { // Limit case: 10*12 + 8 = 128
         Note note = new Note(10, 8, 100, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
@@ -139,7 +139,7 @@ class NoteTest {
     public void testValidNoteHighMidiNoteNumber2() throws InvalidMidiDataException {
         Note note = new Note(10, 11, 100, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
@@ -163,7 +163,7 @@ class NoteTest {
     public void testValidNoteHighVelocity1() throws InvalidMidiDataException { // Limit case
         Note note = new Note(0, 0, 128, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
@@ -172,7 +172,7 @@ class NoteTest {
     public void testValidNoteHighVelocity2() throws InvalidMidiDataException {
         Note note = new Note(0, 0, 247, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
@@ -181,7 +181,7 @@ class NoteTest {
     public void testValidNoteLowVelocity() throws InvalidMidiDataException {
         Note note = new Note(0, 0, -1, 500);
         Pattern pattern = new Pattern();
-        assertThrows(javax.sound.midi.InvalidMidiDataException.class, () -> {
+        assertThrows( InvalidNoteException.class, () -> {
             pattern.addNote(note, 1200);
         });
     }
