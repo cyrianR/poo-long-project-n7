@@ -18,7 +18,8 @@ public class PianoRoll extends HBox {
     private final Background GREEN_BACKGROUD = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY));
     private final Border BLACK_BORDER = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
     private final Border WHITE_BORDER = new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
-    private final static String[] ids = {"do","DoDiese","re","reDiese","mi","fa","faDiese","sol","solDiese","la","laDiese","si"};
+    private final static String[] ids = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+    // private final static String[] ids = {"do","DoDiese","re","reDiese","mi","fa","faDiese","sol","solDiese","la","laDiese","si"};
     private static final Map<String,Integer> notes = new HashMap<String,Integer>();
     private Integer current = 0;
     private GridPane partition = new GridPane();
@@ -57,7 +58,7 @@ public class PianoRoll extends HBox {
     private Button newButton(double x, double y, String text){
         Button button = new Button();
         button.setText(text);
-        if(text.length() > 3){
+        if(text.length() > 1){
             button.setTextFill(Color.WHITE);
             button.setBackground(BLACK_BACKGROUD);
             button.setBorder(WHITE_BORDER);
