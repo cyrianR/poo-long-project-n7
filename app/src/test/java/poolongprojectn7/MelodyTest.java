@@ -14,7 +14,7 @@ import javax.sound.midi.*;
 class MelodyTest {
 
     // The file path where the temporary MIDI file will be stored
-    private static String filePath = System.getProperty("user.dir") + "/app/src/test/testMidi";
+    private static String filePath = System.getProperty("user.dir") + "/src/test/testMidi";
 
     @BeforeAll
     static void setUp() {
