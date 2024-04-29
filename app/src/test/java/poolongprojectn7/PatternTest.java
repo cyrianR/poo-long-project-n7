@@ -1,7 +1,10 @@
 package poolongprojectn7;
 
 import javax.sound.midi.*;
+import java.io.File;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,6 +13,27 @@ import java.io.IOException;
 /** Test program of the Pattern Class.
   */
 class PatternTest {
+
+    // The file path where the temporary MIDI file will be stored
+    private static String filePath = System.getProperty("user.dir") + "src/test/testMidi";
+
+    @BeforeAll
+    static void setUp() {
+        File tempFolder = new File(filePath);
+        tempFolder.mkdirs();
+    }
+
+    @AfterAll
+    static void closeUp() {
+        File tempFolder = new File(filePath);
+        File[] files = tempFolder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                file.delete();
+            }
+        }
+        tempFolder.delete();
+    }
 
     @Test
     public void testEmptyConstructorAndGetters() throws InvalidMidiDataException {
@@ -20,7 +44,7 @@ class PatternTest {
 
     @Test
     public void testMidiConstructorAndGetters() throws InvalidMidiDataException, IOException {
-        Pattern pattern = new Pattern("/home/vic_pabo/Documents/test.mid");
+        Pattern pattern = new Pattern(filePath + "/test.mid");
         
         assertNotNull(pattern.getSequence());
         assertEquals(0, pattern.getPatternLength());
