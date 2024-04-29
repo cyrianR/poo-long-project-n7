@@ -3,6 +3,9 @@ package poolongprojectn7.toolbarcomponent;
 import javafx.geometry.Pos;            //Import pour aligner les éléments dans un layout.
 import javafx.scene.control.*;         //Import des composants de l'interface utilisateur de JavaFX.
 import javafx.scene.layout.HBox;       //Import du type de layout horizontal pour JavaFX.
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 
 public class ToolBarComponent extends ToolBar {
     private ToolBar toolbar;            // attribut de type ToolBar qui est la barre d'outils
@@ -12,6 +15,8 @@ public class ToolBarComponent extends ToolBar {
 
         // Menu Fichiers avec ses options
         MenuButton menuFiles = new MenuButton("Files");    //menu deroulant avec comme nom files
+        ImageView fileIcon = createImageView("File.png"); // Création de l'icône pour le bouton Files.
+        menuFiles.setGraphic(fileIcon); // Assignation de l'icône au bouton Files.
         menuFiles.getItems().addAll(                            // ajout des elements du menu deroulant
             new MenuItem("New project"),
             new MenuItem("Open project"),
@@ -19,10 +24,10 @@ public class ToolBarComponent extends ToolBar {
             new MenuItem("Export project")
         );
 
-        // Boutons de contrôle de lecture
-        Button play = new Button("Start");
-        Button pause = new Button("Pause");
-        Button stop = new Button("Stop");
+        // Boutons de contrôle de lecture avec icônes.
+        Button play = createButtonWithImage("Play.png", "Start");
+        Button pause = createButtonWithImage("Pause.png", "Pause");
+        Button stop = createButtonWithImage("Stop.png", "Stop");
 
         // Slider pour le BPM
         Slider bpmSlider = new Slider(50, 250, 120);  //initialiser le slider avec les bornes et la valeur par defaut 120
@@ -43,28 +48,52 @@ public class ToolBarComponent extends ToolBar {
         HBox timerBox = new HBox(timerLabel, timeLabel); // Layout horizontal pour le timer
         timerBox.setAlignment(Pos.CENTER_LEFT); // Alignement du contenu du timer à gauche
 
-        // Metronome button 
-        ToggleButton metronomeToggle = new ToggleButton("Metronome");   //trogglebutton pour distinguer l'etat active/desactive
+        // Bouton Métronome avec icône.
+        ToggleButton metronomeToggle = createToggleButtonWithImage("Metronom.png", "Metronome"); // Bouton à bascule pour le métronome.
 
         // Boutons pour changer de vue
 
         // ToggleGroup pour les ToggleButtons "Overview" et "Composition view" pour qu'un seul des deux soit active a la fois
         ToggleGroup toggleGroup = new ToggleGroup();
 
-        // Bouton "Overview" de type ToggleButton, activé par défaut
-        ToggleButton overviewButton = new ToggleButton("Overview");
+        // Bouton "Overview" de type ToggleButton avec icone, activé par défaut
+        ToggleButton overviewButton = createToggleButtonWithImage("Overview.png", "Overview"); // Bouton pour la vue d'ensemble.
         overviewButton.setSelected(true); // Activé par défaut
         overviewButton.setToggleGroup(toggleGroup);   //changement dactivation si composition view est active
 
-        // Bouton "Composition view" de type ToggleButton
-        ToggleButton compositionButton = new ToggleButton("Composition view");
+        // Bouton "Composition view" de type ToggleButton avec icone
+        ToggleButton compositionButton = createToggleButtonWithImage("Composition view.png", "Composition view"); // Bouton pour la vue de composition.
         compositionButton.setToggleGroup(toggleGroup);  //changement dactivation si composition view est active
 
 
         // Ajout de tous les contrôles définis à la barre d'outils.
         toolbar.getItems().addAll(menuFiles, play, pause, stop, bpmControl, timerBox, metronomeToggle, overviewButton, compositionButton);
     
-        // getChildren().addAll(menuFiles, play, pause, stop, bpmControl, timerBox, metronomeToggle, overviewButton, compositionButton);
+    }
+
+    // Méthode pour créer une ImageView à partir d'un nom de fichier d'image.
+    private ImageView createImageView(String imageName) {
+        Image image = new Image(getClass().getResourceAsStream("/icons/" + imageName));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(20); // Ajustement de la hauteur de l'icône.
+        imageView.setFitWidth(20); // Ajustement de la largeur de l'icône.
+        return imageView;
+    }
+
+    // Méthode pour créer un bouton avec une icône et une infobulle.
+    private Button createButtonWithImage(String imageName, String tooltipText) {
+        Button button = new Button();
+        button.setGraphic(createImageView(imageName)); // Assignation de l'icône au bouton.
+        button.setTooltip(new Tooltip(tooltipText)); // Assignation de l'infobulle au bouton.
+        return button;
+    }
+
+    // Méthode pour créer un ToggleButton avec une icône et une infobulle.
+    private ToggleButton createToggleButtonWithImage(String imageName, String tooltipText) {
+        ToggleButton toggleButton = new ToggleButton();
+        toggleButton.setGraphic(createImageView(imageName)); // Assignation de l'icône au bouton à bascule.
+        toggleButton.setTooltip(new Tooltip(tooltipText)); // Assignation de l'infobulle au bouton à bascule.
+        return toggleButton;
     }
 
     public ToolBar getToolbar() {
