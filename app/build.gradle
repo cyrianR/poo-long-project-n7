@@ -43,3 +43,7 @@ if (hasProperty('buildScan')) {
     }
 }
 
+javadoc {
+    destinationDir = file("${buildDir}/docs/javadoc")
+}
+
