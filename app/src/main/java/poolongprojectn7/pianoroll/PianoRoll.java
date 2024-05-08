@@ -16,7 +16,7 @@ import javafx.scene.text.*;
 import javafx.stage.*;
 import javafx.event.*;
 
-public class PianoRoll extends Application{
+public class PianoRoll extends HBox{
     private final Background WHITE_BACKGROUD = new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
     private final Background BLACK_BACKGROUD = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     private final Background GREEN_BACKGROUD = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY));
@@ -28,11 +28,8 @@ public class PianoRoll extends Application{
     private static final Map<String,Integer> notes = new HashMap<String,Integer>();
     private Integer octave = 4;
     private GridPane partition = new GridPane();
-    public static void main(String[] args) {
-        launch(args);
-    }
 
-    public void start(Stage stage) {
+    public PianoRoll() {
         Group root = new Group();
         for(int i = 0; i < 12; i++){
             notes.put(ids[i],i);
@@ -65,13 +62,7 @@ public class PianoRoll extends Application{
         VBox pianoAndOctave = new VBox(octaveHBox, piano);
         VBox partitionEtOctaves = new VBox(octaves, partition);
         HBox hbox = new HBox(pianoAndOctave, new Separator(Orientation.VERTICAL), partitionEtOctaves);
-        Scene scene = new Scene(hbox);
-        scene.setFill(Color.GRAY);
-
-
-        stage.setTitle("PianoRoll");
-        stage.setScene(scene);
-        stage.show();
+        this.getChildren().add(hbox);
     }
 
     private Button newButton(double x, double y, String text){
