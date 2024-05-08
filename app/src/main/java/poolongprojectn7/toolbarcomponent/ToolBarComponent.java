@@ -3,15 +3,19 @@ package poolongprojectn7.toolbarcomponent;
 import javafx.geometry.Pos;            //Import pour aligner les éléments dans un layout.
 import javafx.scene.control.*;         //Import des composants de l'interface utilisateur de JavaFX.
 import javafx.scene.layout.HBox;       //Import du type de layout horizontal pour JavaFX.
+import poolongprojectn7.AppView;
+import javafx.event.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 
 public class ToolBarComponent extends ToolBar {
     private ToolBar toolbar;            // attribut de type ToolBar qui est la barre d'outils
+    private AppView view;
  
-    public ToolBarComponent() {                 // construction de la barre d'outils
+    public ToolBarComponent(AppView view) {                 // construction de la barre d'outils
         this.toolbar = new ToolBar();    // initialisation
+        this.view = view;
 
         // Menu Fichiers avec ses options
         MenuButton menuFiles = new MenuButton("Files");    //menu deroulant avec comme nom files
@@ -59,10 +63,12 @@ public class ToolBarComponent extends ToolBar {
         // Bouton "Overview" de type ToggleButton avec icone, activé par défaut
         ToggleButton overviewButton = createToggleButtonWithImage("Overview.png", "Overview"); // Bouton pour la vue d'ensemble.
         overviewButton.setSelected(true); // Activé par défaut
+        overviewButton.setOnAction(handlerOverview);
         overviewButton.setToggleGroup(toggleGroup);   //changement dactivation si composition view est active
 
         // Bouton "Composition view" de type ToggleButton avec icone
         ToggleButton compositionButton = createToggleButtonWithImage("Composition view.png", "Composition view"); // Bouton pour la vue de composition.
+        compositionButton.setOnAction(handlerCompositionView);
         compositionButton.setToggleGroup(toggleGroup);  //changement dactivation si composition view est active
 
 
@@ -70,6 +76,16 @@ public class ToolBarComponent extends ToolBar {
         toolbar.getItems().addAll(menuFiles, play, pause, stop, bpmControl, timerBox, metronomeToggle, overviewButton, compositionButton);
     
     }
+
+    // Method to handle actions from the Overview button
+    EventHandler<ActionEvent> handlerOverview = event -> {
+        this.view.switchToOverview();
+    };
+
+    // Method to handle actions from the Composition View button
+    EventHandler<ActionEvent> handlerCompositionView = event -> {
+        this.view.switchToCompositionView();
+    };
 
     // Méthode pour créer une ImageView à partir d'un nom de fichier d'image.
     private ImageView createImageView(String imageName) {
