@@ -3,6 +3,7 @@ package poolongprojectn7.PlaylistComponent;
 import java.util.List;
 import javafx.event.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
@@ -30,17 +31,26 @@ public class Track extends HBox {
         this.colors = c;
         this.color = this.colors.get(number % 2);
         
+        Button changeColor = createButtonWithImage("Color.png", "Change color");
+        HBox identification = new HBox(changeColor, new Text(this.name));
+        identification.setSpacing(SPACING);
+        identification.setAlignment(Pos.CENTER_LEFT);
         Button playSolo = createButtonWithImage("Play.png", "Start");
         ToggleButton muteButton = createToggleButtonWithImage("Mute.png", "Mute");
         muteButton.setOnAction(handlerMute);
         HBox actions = new HBox(muteButton, playSolo);
         actions.setSpacing(SPACING);
-        VBox parameters = new VBox(new Text(this.name), actions);
+        VBox parameters = new VBox(identification, actions);
         parameters.setSpacing(SPACING);
 
         this.getChildren().add(parameters);
         this.setBackground(new Background(new BackgroundFill(this.color, CornerRadii.EMPTY, Insets.EMPTY)));
         this.setPadding(new Insets(5,5,5,5));
+    }
+
+    // Method to know if the track is muted or not
+    public boolean isTrackMuted() {
+        return isMuted;
     }
 
     // Method to actions on Mute button
