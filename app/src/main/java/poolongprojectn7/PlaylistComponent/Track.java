@@ -11,18 +11,25 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class Track extends HBox {
-    private final int SPACING = 5;      // Spacing between the elements
-    private String name;                // Name of the track
-    private Color color;                // Color of the track
-    private List<Color> colors;         // Available colors
-    private boolean isMuted = false;    // Is this track muted ?
+    private final int SPACING = 5;          // Spacing between the elements
+    private String name;                    // Name of the track
+    private Color color;                    // Color of the track
+    private List<Color> colors;             // Available colors
+    private boolean isMuted = false;        // Is this track muted ?
+    private GridPane colorsGridPane = null; // Color pane
+    private boolean isColorsPaneOn = false; // Is the color pane displayed
 
     // Creation of the track
     public Track(List<Color> c, int number) {
@@ -31,7 +38,8 @@ public class Track extends HBox {
         this.colors = c;
         this.color = this.colors.get(number % 2);
         
-        Button changeColor = createButtonWithImage("Color.png", "Change color");
+        ToggleButton changeColor = createToggleButtonWithImage("Color.png", "Change color");
+        changeColor.setOnAction(handlerColor);
         HBox identification = new HBox(changeColor, new Text(this.name));
         identification.setSpacing(SPACING);
         identification.setAlignment(Pos.CENTER_LEFT);
@@ -46,6 +54,7 @@ public class Track extends HBox {
         this.getChildren().add(parameters);
         this.setBackground(new Background(new BackgroundFill(this.color, CornerRadii.EMPTY, Insets.EMPTY)));
         this.setPadding(new Insets(5,5,5,5));
+        this.setSpacing(SPACING);
     }
 
     // Method to know if the track is muted or not
@@ -58,12 +67,43 @@ public class Track extends HBox {
         this.isMuted = !this.isMuted;
     };
 
+    // Method to handle actions on Color button
+    EventHandler<ActionEvent> handlerColorButton = event -> {
+        this.setBackground(((Button) event.getSource()).getBackground());
+        this.getChildren().remove(this.colorsGridPane);
+        this.isColorsPaneOn = !this.isColorsPaneOn;
+    };
+    
+    // Method to handle actions on Set Color button
+    EventHandler<ActionEvent> handlerColor = event -> {
+        if (this.colorsGridPane == null) {
+            this.colorsGridPane = new GridPane();
+            for (int i = 0; i < colors.size(); i++) {
+                int row = ((float) (i + 1) / (float) colors.size()) <= 0.5 ? 0 : 1;
+                int column = i - row * (int) Math.ceil(colors.size()/2);
+                Button squareColor = new Button();
+                squareColor.setBackground(new Background(new BackgroundFill(colors.get(i), CornerRadii.EMPTY, Insets.EMPTY)));
+                squareColor.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+                squareColor.setOnAction(handlerColorButton);
+                this.colorsGridPane.add(squareColor, column, row);
+            }
+            this.colorsGridPane.setHgap(5);
+            this.colorsGridPane.setVgap(5);
+        }
+        if (this.isColorsPaneOn) {
+            this.getChildren().remove(this.colorsGridPane);
+        } else {
+            this.getChildren().add(this.colorsGridPane);
+        }
+        this.isColorsPaneOn = !this.isColorsPaneOn;
+    };
+
     // Method to create an ImageView from the name of an image file
     private ImageView createImageView(String imageName) {
         Image image = new Image(getClass().getResourceAsStream("/icons/" + imageName));
         ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(15); // Ajustement of the height of the icon.
-        imageView.setFitWidth(15); // Ajustement of the width of the icon.
+        imageView.setFitHeight(12); // Ajustement of the height of the icon.
+        imageView.setFitWidth(12); // Ajustement of the width of the icon.
         return imageView;
     }
 
