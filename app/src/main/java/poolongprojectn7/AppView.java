@@ -1,17 +1,16 @@
 package poolongprojectn7;
 
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import poolongprojectn7.PlaylistComponent.PlaylistComponent;
 import poolongprojectn7.pianoroll.PianoRoll;
 import poolongprojectn7.toolbarcomponent.ToolBarComponent;
 import javafx.scene.control.ToolBar;
 
 public class AppView extends VBox {
 
-    private VBox overview;
-    private VBox compositionView;
     private ToolBar toolBar;
     private PianoRoll piano;
+    private PlaylistComponent playlist;
 
     /** Constructor view part of the MVC of the application. */
     public AppView(AppModel model, Runnable handler) {
@@ -19,19 +18,20 @@ public class AppView extends VBox {
         // Creating toolbar
         this.toolBar = new ToolBarComponent(this).getToolbar();
         this.piano = new PianoRoll();
+        this.playlist = new PlaylistComponent();
 
-        getChildren().addAll(this.toolBar);
+        this.getChildren().addAll(this.toolBar, this.playlist);
     }
 
     // Method to switch to Overview view
     public void switchToOverview() {
-        getChildren().remove(this.piano);
-        //getChildren().addAll();
+        this.getChildren().removeAll(this.piano, this.playlist);
+        this.getChildren().addAll(this.playlist);
     }
 
     // Method to switch to Composition View view
     public void switchToCompositionView() {
-        getChildren().remove(this.piano);
-        getChildren().addAll(this.piano);
+        this.getChildren().removeAll(this.piano, this.playlist);
+        this.getChildren().addAll(this.piano);
     }
 }
