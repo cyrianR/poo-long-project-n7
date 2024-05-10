@@ -4,7 +4,10 @@ import java.util.List;
 import javafx.event.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -20,7 +23,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 public class Track extends HBox {
     private final int SPACING = 5;          // Spacing between the elements
@@ -30,6 +32,9 @@ public class Track extends HBox {
     private boolean isMuted = false;        // Is this track muted ?
     private GridPane colorsGridPane = null; // Color pane
     private boolean isColorsPaneOn = false; // Is the color pane displayed
+    private Node trackName;                 // Node containing the name of the track
+    private HBox identification;            // Box containing the identification of the track (name + color)
+    private VBox parameters;                // Box containing the parameters of the track
 
     // Creation of the track
     public Track(List<Color> c, int number) {
@@ -38,20 +43,21 @@ public class Track extends HBox {
         this.colors = c;
         this.color = this.colors.get(number % 2);
         
-        ToggleButton changeColor = createToggleButtonWithImage("Color.png", "Change color");
+        Button changeColor = createButtonWithImage("Color.png", "Change color");
         changeColor.setOnAction(handlerColor);
-        HBox identification = new HBox(changeColor, new Text(this.name));
-        identification.setSpacing(SPACING);
-        identification.setAlignment(Pos.CENTER_LEFT);
+        createHyperlinkName();
+        this.identification = new HBox(changeColor, this.trackName);
+        this.identification.setSpacing(SPACING);
+        this.identification.setAlignment(Pos.CENTER_LEFT);
         Button playSolo = createButtonWithImage("Play.png", "Start");
         ToggleButton muteButton = createToggleButtonWithImage("Mute.png", "Mute");
         muteButton.setOnAction(handlerMute);
         HBox actions = new HBox(muteButton, playSolo);
         actions.setSpacing(SPACING);
-        VBox parameters = new VBox(identification, actions);
-        parameters.setSpacing(SPACING);
+        this.parameters = new VBox(this.identification, actions);
+        this.parameters.setSpacing(SPACING);
 
-        this.getChildren().add(parameters);
+        this.getChildren().add(this.parameters);
         this.setBackground(new Background(new BackgroundFill(this.color, CornerRadii.EMPTY, Insets.EMPTY)));
         this.setPadding(new Insets(5,5,5,5));
         this.setSpacing(SPACING);
@@ -62,7 +68,23 @@ public class Track extends HBox {
         return isMuted;
     }
 
-    // Method to actions on Mute button
+    // Method to handle a modification of the name of the track
+    EventHandler<ActionEvent> handlerModifiedName = event -> {
+        this.identification.getChildren().remove(this.trackName);
+        this.name = ((TextField) event.getSource()).getText();
+        createHyperlinkName();
+        this.identification.getChildren().add(this.trackName);
+    };
+
+    // Method to handle actions on track name
+    EventHandler<ActionEvent> handlerName = event -> {
+        this.identification.getChildren().remove(this.trackName);
+        this.trackName = new TextField(this.name);
+        ((TextField) this.trackName).setOnAction(handlerModifiedName);
+        this.identification.getChildren().add(this.trackName);
+    };
+
+    // Method to handle actions on Mute button
     EventHandler<ActionEvent> handlerMute = event -> {
         this.isMuted = !this.isMuted;
     };
@@ -121,5 +143,12 @@ public class Track extends HBox {
         toggleButton.setGraphic(createImageView(imageName));    // Binding the icon to the toggle button.
         toggleButton.setTooltip(new Tooltip(tooltipText));      // Binding the tooltip to the toggle button.
         return toggleButton;
+    }
+
+    // Method to set the hyperlink of the name of the track
+    private void createHyperlinkName() {
+        this.trackName = new Hyperlink(this.name);
+        ((Hyperlink) this.trackName).setTextFill(Color.BLACK);
+        ((Hyperlink) this.trackName).setOnAction(handlerName);
     }
 }
