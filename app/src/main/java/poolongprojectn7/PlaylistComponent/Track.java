@@ -1,27 +1,15 @@
 package poolongprojectn7.PlaylistComponent;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.event.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 public class Track extends HBox {
@@ -39,14 +27,27 @@ public class Track extends HBox {
     // Creation of the track
     public Track(List<Color> c, int number) {
         super();
+
         this.name = "Track " + String.valueOf(number + 1);
         this.colors = c;
         this.color = this.colors.get(number % 2);
-        
-        Button changeColor = createButtonWithImage("Color.png", "Change color");
-        changeColor.setOnAction(handlerColor);
+
+        MenuButton menuColor = new MenuButton();
+        ImageView colorIcon = createImageView("Color.png");
+        menuColor.setGraphic(colorIcon);
+        List<MenuItem> items = new ArrayList<MenuItem>();
+        for (int i = 0; i < colors.size(); i++) {
+            MenuItem item = new MenuItem("               ");
+            int r = ((int) Math.round(colors.get(i).getRed() * 255));
+            int g = ((int) Math.round(colors.get(i).getGreen() * 255));
+            int b = ((int) Math.round(colors.get(i).getBlue() * 255));
+            item.setStyle(String.format("-fx-background-color: rgb(%d,%d,%d)", r, g, b));
+            item.setOnAction(handlerColorButton);
+            items.add(item);
+        }
+        items.forEach(menuColor.getItems()::add);
         createHyperlinkName();
-        this.identification = new HBox(changeColor, this.trackName);
+        this.identification = new HBox(menuColor, this.trackName);
         this.identification.setSpacing(SPACING);
         this.identification.setAlignment(Pos.CENTER_LEFT);
         Button playSolo = createButtonWithImage("Play.png", "Start");
@@ -91,32 +92,13 @@ public class Track extends HBox {
 
     // Method to handle actions on Color button
     EventHandler<ActionEvent> handlerColorButton = event -> {
-        this.setBackground(((Button) event.getSource()).getBackground());
+        String styleItem = ((MenuItem) event.getSource()).getStyle();
+        String[] colors = styleItem.split("[()]")[1].split(",");
+        int red = Integer.valueOf(colors[0]);
+        int green = Integer.valueOf(colors[1]);
+        int blue = Integer.valueOf(colors[2]);
+        this.setBackground(new Background(new BackgroundFill(Color.rgb(red, green, blue, 1), CornerRadii.EMPTY, Insets.EMPTY)));
         this.getChildren().remove(this.colorsGridPane);
-        this.isColorsPaneOn = !this.isColorsPaneOn;
-    };
-    
-    // Method to handle actions on Set Color button
-    EventHandler<ActionEvent> handlerColor = event -> {
-        if (this.colorsGridPane == null) {
-            this.colorsGridPane = new GridPane();
-            for (int i = 0; i < colors.size(); i++) {
-                int row = ((float) (i + 1) / (float) colors.size()) <= 0.5 ? 0 : 1;
-                int column = i - row * (int) Math.ceil(colors.size()/2);
-                Button squareColor = new Button();
-                squareColor.setBackground(new Background(new BackgroundFill(colors.get(i), CornerRadii.EMPTY, Insets.EMPTY)));
-                squareColor.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-                squareColor.setOnAction(handlerColorButton);
-                this.colorsGridPane.add(squareColor, column, row);
-            }
-            this.colorsGridPane.setHgap(5);
-            this.colorsGridPane.setVgap(5);
-        }
-        if (this.isColorsPaneOn) {
-            this.getChildren().remove(this.colorsGridPane);
-        } else {
-            this.getChildren().add(this.colorsGridPane);
-        }
         this.isColorsPaneOn = !this.isColorsPaneOn;
     };
 
