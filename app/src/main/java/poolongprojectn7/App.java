@@ -14,6 +14,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         // NB : Stage = Window
         primaryStage.setTitle("N7 STUDIO");
+        primaryStage.setMaximized(true);
         primaryStage.setOnCloseRequest(event -> {
             event.consume();
             closeStage(primaryStage);
