@@ -1,6 +1,7 @@
 package poolongprojectn7.PlaylistComponent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javafx.event.*;
 import javafx.geometry.Insets;
@@ -14,33 +15,30 @@ import javafx.scene.paint.Color;
 
 public class Track extends HBox {
     private final int SPACING = 5;          // Spacing between the elements
+    private final static List<Color> COLORS = Arrays.asList(Color.LIGHTBLUE, Color.LIGHTGREEN, Color.LIGHTYELLOW, Color.LIGHTPINK, Color.LIGHTCYAN, Color.LIGHTCORAL, Color.LIGHTSEAGREEN, Color.LIGHTSALMON, Color.LIGHTSKYBLUE, Color.LAVENDER); // Colors of track available
     private String name;                    // Name of the track
     private Color color;                    // Color of the track
-    private List<Color> colors;             // Available colors
     private boolean isMuted = false;        // Is this track muted ?
-    private GridPane colorsGridPane = null; // Color pane
-    private boolean isColorsPaneOn = false; // Is the color pane displayed
     private Node trackName;                 // Node containing the name of the track
     private HBox identification;            // Box containing the identification of the track (name + color)
     private VBox parameters;                // Box containing the parameters of the track
 
     // Creation of the track
-    public Track(List<Color> c, int number) {
+    public Track(int number) {
         super();
 
         this.name = "Track " + String.valueOf(number + 1);
-        this.colors = c;
-        this.color = this.colors.get(number % 2);
+        this.color = Track.COLORS.get(number % 2);
 
         MenuButton menuColor = new MenuButton();
         ImageView colorIcon = createImageView("Color.png");
         menuColor.setGraphic(colorIcon);
         List<MenuItem> items = new ArrayList<MenuItem>();
-        for (int i = 0; i < colors.size(); i++) {
+        for (int i = 0; i < Track.COLORS.size(); i++) {
             MenuItem item = new MenuItem("               ");
-            int r = ((int) Math.round(colors.get(i).getRed() * 255));
-            int g = ((int) Math.round(colors.get(i).getGreen() * 255));
-            int b = ((int) Math.round(colors.get(i).getBlue() * 255));
+            int r = ((int) Math.round(Track.COLORS.get(i).getRed() * 255));
+            int g = ((int) Math.round(Track.COLORS.get(i).getGreen() * 255));
+            int b = ((int) Math.round(Track.COLORS.get(i).getBlue() * 255));
             item.setStyle(String.format("-fx-background-color: rgb(%d,%d,%d)", r, g, b));
             item.setOnAction(handlerColorButton);
             items.add(item);
@@ -98,8 +96,6 @@ public class Track extends HBox {
         int green = Integer.valueOf(colors[1]);
         int blue = Integer.valueOf(colors[2]);
         this.setBackground(new Background(new BackgroundFill(Color.rgb(red, green, blue, 1), CornerRadii.EMPTY, Insets.EMPTY)));
-        this.getChildren().remove(this.colorsGridPane);
-        this.isColorsPaneOn = !this.isColorsPaneOn;
     };
 
     // Method to create an ImageView from the name of an image file
