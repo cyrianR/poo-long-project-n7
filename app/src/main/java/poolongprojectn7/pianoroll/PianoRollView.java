@@ -1,5 +1,6 @@
 package poolongprojectn7.pianoroll;
 
+<<<<<<< HEAD
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -26,6 +27,18 @@ public class PianoRollView extends GridPane{
         Color bg = i%2 == 0 ? Color.WHITE : Color.GRAY;
         bg = model.isNoteActive(i, j) ? bg : Color.GREEN;
         this.rectangles[i][j].setFill(bg);
+=======
+import javafx.scene.layout.HBox;
+
+public class PianoRollView extends HBox{
+    
+    private PianoRollModel model;
+
+    public PianoRollView(PianoRollModel model) {
+        this.model = model;
+
+        
+>>>>>>> 00ccf4e (refactor(pianoroll): start refactor)
     }
 
 

@@ -1,5 +1,6 @@
 package poolongprojectn7.pianoroll;
 
+<<<<<<< HEAD
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -149,4 +150,18 @@ public class PianoRollModel {
     public Pattern getPattern() {
         return this.pattern;
     }
+=======
+import java.util.HashMap;
+import java.util.Map;
+
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+
+public class PianoRollModel {
+
+    private final String[] NOTE_LETTERS = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+    private final IntegerProperty currentOctave = new SimpleIntegerProperty(4);
+
+    
+>>>>>>> 00ccf4e (refactor(pianoroll): start refactor)
 }
