@@ -8,11 +8,12 @@ import javax.sound.midi.*;
  * Represents a pattern used by a piano roll to
  * manipulate the musical data in the piano roll.
  * This is a part of the piano roll model.
- * @author Ragot Cyrian
+ * @author Cyrian Ragot and Victor Barilly
  * @version Alpha
  */
 public class Pattern {
-
+    /* Maximum index of the note index. */
+    private final int NOTE_INDEX_MAX = 11;
     /* Number of tracks in a pattern, there is one track for each musical note. */
     private final int NUM_TRACKS = 128;
     /* Resolution of the pattern sequence in ticks. */
@@ -25,7 +26,9 @@ public class Pattern {
     /* Array of the tracks present in the sequence. */
     private Track[] sequenceTracks = new Track[NUM_TRACKS];
     /* Total length of the pattern, expressed in ticks. */
-    private long patternLength = 0;
+    private long patternLength;
+    /* Instrument used in the pattern */
+    private int instrument;
 
     /**
      * Create a new pattern.
@@ -33,6 +36,7 @@ public class Pattern {
      */
     public Pattern() throws InvalidMidiDataException {
         this.sequence = initSequence();
+        this.patternLength = 0;
     }
 
     /**
@@ -43,7 +47,9 @@ public class Pattern {
      */
     public Pattern(String path) throws InvalidMidiDataException, IOException {
         this.sequence = MidiSystem.getSequence(new java.io.File(path));
-        this.sequenceTracks = this.sequence.getTracks(); 
+        this.sequenceTracks = this.sequence.getTracks();
+        this.patternLength = 0;
+        updatePatternLength();
     }
 
     /**
@@ -54,11 +60,7 @@ public class Pattern {
     private Sequence initSequence() throws InvalidMidiDataException {
         Sequence sequence = null;
         sequence = new Sequence(Sequence.PPQ, TICK_RESOLUTION);
-        // Adding a track for each musical note present in the NUM_OCTAVE octaves.
-        // @TODO : optimisation
-        for (int i = 0; i < NUM_TRACKS; i++) {
-            sequenceTracks[i] = sequence.createTrack();
-        }
+        sequenceTracks[CHANNEL] = sequence.createTrack();
         return sequence;
     }
 
@@ -69,12 +71,16 @@ public class Pattern {
      * @throws InvalidNoteException if the note attributs are incorrect
      */
     public void addNote(Note note, long tickStart) throws InvalidNoteException {
+        if (note.getNoteIndex() > NOTE_INDEX_MAX) {
+            throw new InvalidNoteException("Midi note number or note velocity is invalid.");
+        }
+        
         int midiNote = note.getMidiNoteNumber();
         int velocity = note.getVelocity();
         long duration = note.getDurationTicks();
         long endTick = tickStart + duration;
 
-        // MidiMessage for note-on and note-off event
+        /* MidiMessage for note-on and note-off event */
         MidiMessage noteOnMessage;
         MidiMessage noteOffMessage;
         try {
@@ -84,13 +90,13 @@ public class Pattern {
             throw new InvalidNoteException("Midi note number or note velocity is invalid.");
         }
 
-        // MidiEvent for note-on and note-off messages
+        /* MidiEvent for note-on and note-off messages */
         MidiEvent noteOnEvent = new MidiEvent(noteOnMessage, tickStart);
         MidiEvent noteOffEvent = new MidiEvent(noteOffMessage, endTick);
         
-        // Add note events to the corresponding track
-        sequenceTracks[midiNote].add(noteOnEvent);
-        sequenceTracks[midiNote].add(noteOffEvent);
+        /* Add note events to the corresponding track */
+        sequenceTracks[CHANNEL].add(noteOnEvent);
+        sequenceTracks[CHANNEL].add(noteOffEvent);
 
         updatePatternLength();
     }
@@ -104,29 +110,39 @@ public class Pattern {
         int midiNote = note.getMidiNoteNumber();
         long duration = note.getDurationTicks();
         
-        Track noteTrack = this.sequenceTracks[midiNote];
+        Track noteTrack = this.sequenceTracks[CHANNEL];
 
-        // browse through the events of the track associated to the note
+        /* Browse through the events of the track associated to the note */
         for (int i = 0; i < noteTrack.size(); i++) {
             MidiEvent event = noteTrack.get(i);
             MidiMessage message = event.getMessage();
             if (message instanceof ShortMessage) {
                 ShortMessage shortMessage = (ShortMessage) message;
+                /* Remove the note start */
                 if (shortMessage.getData1() == midiNote
                         && event.getTick() == tickStart
                         && shortMessage.getCommand() == ShortMessage.NOTE_ON) {
-                    // remove note-on event
-                    this.sequenceTracks[midiNote].remove(event);
+                    this.sequenceTracks[CHANNEL].remove(event);
                 } else if (shortMessage.getData1() == midiNote
                         && event.getTick() == tickStart + duration
                         && shortMessage.getCommand() == ShortMessage.NOTE_OFF) {
-                    // remove note-off event
-                    this.sequenceTracks[midiNote].remove(event);
+
+                    this.sequenceTracks[CHANNEL].remove(event);
                 }
             }
         }
+        /* Remove the end of track event if present */
+        MidiEvent endOfTrackEvent = null;
+        for (int i = 0; i < noteTrack.size(); i++) {
+            MidiEvent event = noteTrack.get(i);
+            if (event.getTick() == tickStart + duration) {
+                endOfTrackEvent = event;
+                this.sequenceTracks[CHANNEL].remove(event);
+                break;
+            }
+        }
+        updatePatternLength();    
 
-        updatePatternLength();
     }
 
     /**
@@ -140,19 +156,23 @@ public class Pattern {
 
     /**
      * Update the pattern length attribut.
-     * @TODO : optimisation
      */
     private void updatePatternLength() {
-        for (Track track : this.sequenceTracks) {
-            for (int i = 0; i < track.size(); i++) {
-                MidiEvent event = track.get(i);
-                long eventTick = event.getTick();
-                if (eventTick > this.patternLength) {
-                    this.patternLength = eventTick;
-                }
+        long maxEventTick = 0;
+
+        Track noteTrack = this.sequenceTracks[CHANNEL];
+        
+        for (int i = 0; i < noteTrack.size(); i++) {
+            MidiEvent event = noteTrack.get(i);
+            long eventTick = event.getTick();
+            if (eventTick > maxEventTick) {
+                maxEventTick = eventTick;
             }
         }
+    
+        this.patternLength = maxEventTick;
     }
+    
 
     /**
      * Obtains the sequence of the pattern.
@@ -169,5 +189,44 @@ public class Pattern {
     public long getPatternLength() {
         return this.patternLength;
     }
+
+    /**
+     * Obtains the instrument of the pattern.
+     * @return the instrument of the pattern
+     */
+    public int getInstrument() {
+        return this.instrument;
+    }
+
+    /**
+     * Change the instrument of the pattern
+     * @param instrument the new instrument
+     * @throws InvalidMidiDataException if MIDI data is not valid
+     */
+    public void setInstrument(int instrument) throws InvalidMidiDataException {
+        this.instrument = instrument;
+        ShortMessage instrumentChange = new ShortMessage();
+        try {
+            instrumentChange.setMessage(ShortMessage.PROGRAM_CHANGE, CHANNEL, instrument, 0);
+        } catch (InvalidMidiDataException e) {
+            throw new InvalidMidiDataException("Invalid MIDI data for instrument change.");
+        }
+        for (Track track : this.sequenceTracks) {
+            if (track != null) {
+                MidiEvent instrumentChangeEvent = new MidiEvent(instrumentChange, 0);
+                track.add(instrumentChangeEvent);
+            }
+        }
+    }
+
+    /**
+     * Obtains the number of the channel of the pattern.
+     * @return the number of the channel of the pattern
+     */
+    public int getChannel() {
+        return this.CHANNEL;
+    }
+
+
 
 }
