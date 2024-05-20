@@ -32,10 +32,14 @@ public class Pattern {
 
     /**
      * Create a new pattern.
-     * @throws InvalidMidiDataException if the specified sequence's divisionType is not valid
      */
-    public Pattern() throws InvalidMidiDataException {
-        this.sequence = initSequence();
+    public Pattern() {
+        try {
+            this.sequence = initSequence();
+        } catch (InvalidMidiDataException e) {
+            /* If the specified sequence's divisionType is not valid */
+            e.printStackTrace();
+        }
         this.patternLength = 0;
         this.instrument = 0;    
     }
