@@ -8,7 +8,6 @@ import javax.sound.midi.*;
  * Represents a pattern used by a piano roll to
  * manipulate the musical data in the piano roll.
  * This is a part of the piano roll model.
- * @author Cyrian Ragot and Victor Barilly
  * @version Alpha
  */
 public class Pattern {
