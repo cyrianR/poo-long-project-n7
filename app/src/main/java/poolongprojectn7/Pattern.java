@@ -37,6 +37,7 @@ public class Pattern {
     public Pattern() throws InvalidMidiDataException {
         this.sequence = initSequence();
         this.patternLength = 0;
+        this.instrument = 0;    
     }
 
     /**
@@ -49,6 +50,7 @@ public class Pattern {
         this.sequence = MidiSystem.getSequence(new java.io.File(path));
         this.sequenceTracks = this.sequence.getTracks();
         this.patternLength = 0;
+        setInstrument(getInstrument(this.sequence));
         updatePatternLength();
     }
 
@@ -132,17 +134,14 @@ public class Pattern {
             }
         }
         /* Remove the end of track event if present */
-        MidiEvent endOfTrackEvent = null;
         for (int i = 0; i < noteTrack.size(); i++) {
             MidiEvent event = noteTrack.get(i);
             if (event.getTick() == tickStart + duration) {
-                endOfTrackEvent = event;
                 this.sequenceTracks[CHANNEL].remove(event);
                 break;
             }
         }
-        updatePatternLength();    
-
+        updatePatternLength();
     }
 
     /**
@@ -161,7 +160,7 @@ public class Pattern {
         long maxEventTick = 0;
 
         Track noteTrack = this.sequenceTracks[CHANNEL];
-        
+
         for (int i = 0; i < noteTrack.size(); i++) {
             MidiEvent event = noteTrack.get(i);
             long eventTick = event.getTick();
@@ -169,10 +168,9 @@ public class Pattern {
                 maxEventTick = eventTick;
             }
         }
-    
+
         this.patternLength = maxEventTick;
     }
-    
 
     /**
      * Obtains the sequence of the pattern.
@@ -196,6 +194,27 @@ public class Pattern {
      */
     public int getInstrument() {
         return this.instrument;
+    }
+
+    /**
+     * Obtains the instrument used in the sequence.
+     * @param sequence the sequence
+     * @return the instrument of the pattern
+     */
+    private int getInstrument(Sequence sequence) {
+        for (Track track : sequence.getTracks()) {
+            for (int i = 0; i < track.size(); i++) {
+                MidiEvent event = track.get(i);
+                MidiMessage message = event.getMessage();
+                if (message instanceof ShortMessage) {
+                    ShortMessage sm = (ShortMessage) message;
+                    if (sm.getCommand() == ShortMessage.PROGRAM_CHANGE) {
+                        return sm.getData1();
+                    }
+                }
+            }
+        }
+        return 0;
     }
 
     /**
@@ -226,7 +245,5 @@ public class Pattern {
     public int getChannel() {
         return this.CHANNEL;
     }
-
-
 
 }

@@ -145,12 +145,12 @@ class MelodyTest {
     public void testReadAndWrite() throws InvalidMidiDataException, IOException {
             /* Create and play a new sequence */
             Pattern pattern = new Pattern();   
+            pattern.setInstrument(39);
             createAndSaveMidi(pattern);
-            playSequence(pattern);
 
             /* Play a sequence saved in the past */
             pattern = new Pattern(filePath + "/test.mid");
-            //playSequence(pattern);
+            playSequence(pattern);
 
             assertTrue(true);
     }
