@@ -22,9 +22,10 @@ public class AppView extends VBox {
 
         // Creating toolbar
         this.toolBar = new ToolBarComponent(this).getToolbar();
-        this.piano = new PianoRoll();
+        Pattern pattern = new Pattern();
+        this.browser = new Browser(this, pattern).getBrowser();
+        this.piano = new PianoRoll(pattern);
         this.playlist = new PlaylistComponent();
-        this.browser = new Browser(this).getBrowser();
         this.pianoView = new HBox(this.browser, this.piano);
 
         this.getChildren().addAll(this.toolBar, this.playlist);
