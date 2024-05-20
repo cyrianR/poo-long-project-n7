@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.*;
 import javafx.stage.*;
+import poolongprojectn7.Pattern;
 import javafx.event.*;
 
 public class PianoRoll extends HBox{
@@ -28,6 +29,7 @@ public class PianoRoll extends HBox{
     private static final Map<String,Integer> notes = new HashMap<String,Integer>();
     private Integer octave = 4;
     private GridPane partition = new GridPane();
+    private Pattern pattern;
 
     public PianoRoll() {
         Group root = new Group();
