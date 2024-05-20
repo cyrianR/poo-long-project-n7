@@ -31,7 +31,8 @@ public class PianoRoll extends HBox{
     private GridPane partition = new GridPane();
     private Pattern pattern;
 
-    public PianoRoll() {
+    public PianoRoll(Pattern pattern) {
+        this.pattern = pattern;
         Group root = new Group();
         for(int i = 0; i < 12; i++){
             notes.put(ids[i],i);
