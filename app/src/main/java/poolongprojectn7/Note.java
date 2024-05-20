@@ -3,7 +3,6 @@ package poolongprojectn7;
 /**
  * Represents a note that can be added to a Pattern.
  * This is a part of the piano roll model.
- * @author Cyrian Ragot and Victor Barilly
  * @version Alpha
  */
 public class Note {
