@@ -1,7 +1,6 @@
 package poolongprojectn7.browersComponent;
 
 import poolongprojectn7.AppView;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.sound.midi.Instrument;
@@ -18,9 +17,7 @@ public class Browser extends TreeView<String> {
     private Pattern pattern;
     private TreeView<String> browser;
     private AppView view;
-    // liste de test
     private HashMap<String, Integer> instrumentHashMap = new HashMap<String, Integer>();
-
 
     @SuppressWarnings("unchecked")
     public Browser(AppView view, Pattern pattern) {
