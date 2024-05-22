@@ -4,7 +4,7 @@ package poolongprojectn7.pianoroll;
 public class PianoRollModelLeandre {
 
     private Integer currentOctave = 4;
-    private double[][] actives;
+    private double[][] actives = new double[12][52];
 
     public PianoRollModelLeandre(){
         for(int i = 0; i < 12; i++){
