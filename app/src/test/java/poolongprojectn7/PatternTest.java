@@ -14,8 +14,8 @@ import java.io.IOException;
   */
 class PatternTest {
 
-    // The file path where the temporary MIDI file will be stored
-    private static String filePath = System.getProperty("user.dir") + "src/test/testMidi";
+    /* The file path where the temporary MIDI file will be stored */
+    private static String filePath = System.getProperty("user.dir") + "/src/test/testMidi/";
 
     @BeforeAll
     static void setUp() {
@@ -44,10 +44,22 @@ class PatternTest {
 
     @Test
     public void testMidiConstructorAndGetters() throws InvalidMidiDataException, IOException {
-        Pattern pattern = new Pattern(filePath + "/test.mid");
+        Pattern patternToSave = new Pattern();
+        Note la = new Note(4, 9, 100, 500);
+        Note si = new Note(4, 11, 100, 100);
         
+        try {
+        patternToSave.addNote(la, 0);
+        patternToSave.addNote(si, 300);
+        patternToSave.save(filePath, "patternsaved.mid");
+        } catch (InvalidNoteException | IOException e) {
+            e.printStackTrace();
+        }
+        
+        Pattern pattern = new Pattern(filePath, "patternsaved.mid");
+       
         assertNotNull(pattern.getSequence());
-        assertEquals(0, pattern.getPatternLength());
+        assertEquals(500, pattern.getPatternLength());
     }
 
     @Test
@@ -97,17 +109,15 @@ class PatternTest {
         int noteTickStart = 20;
         pattern.addNote(note, noteTickStart);
         Sequence sequence = pattern.getSequence();
-        Track track = sequence.getTracks()[note.getMidiNoteNumber()];
+        Track track = sequence.getTracks()[pattern.getChannel()];
 
-        boolean CorrectEventFound = false;
+        boolean CorrectEventFound = true;
         for (int i = 0; i < track.size(); i++) {
             MidiEvent event = track.get(i);
             System.out.print(event.getTick());
             if ((event.getTick() != noteTickStart) && (event.getTick() != pattern.getPatternLength())) {
                 CorrectEventFound = false;
                 break;
-            } else {
-                CorrectEventFound = true;
             }
         }
         assertTrue(CorrectEventFound, "Correct event not found");
@@ -124,34 +134,22 @@ class PatternTest {
         pattern.addNote(note2, note2TickStart);
 
         Sequence sequence = pattern.getSequence();
-        Track track1 = sequence.getTracks()[note1.getMidiNoteNumber()];
-        Track track2 = sequence.getTracks()[note2.getMidiNoteNumber()];
+        Track track = sequence.getTracks()[pattern.getChannel()];
 
-        boolean CorrectEventFound1 = false;
-        for (int i = 0; i < track1.size(); i++) {
-            MidiEvent event = track1.get(i);
+        boolean CorrectEventsFound = true;
+        for (int i = 0; i < track.size(); i++) {
+            MidiEvent event = track.get(i);
             System.out.print(event.getTick());
-            if ((event.getTick() != note1TickStart) && (event.getTick() != note1.getDurationTicks() + note1TickStart) && (event.getTick() != pattern.getPatternLength())) {
-                CorrectEventFound1 = false;
+            if ((event.getTick() != note1TickStart) && (event.getTick() != note2TickStart)
+                        && (event.getTick() != note1.getDurationTicks() + note1TickStart)
+                        && (event.getTick() != note2.getDurationTicks() + note2TickStart)
+                        && (event.getTick() != pattern.getPatternLength())){
+                CorrectEventsFound = false;
                 break;
-            } else {
-                CorrectEventFound1 = true;
             }
         }
-
-        boolean CorrectEventFound2 = false;
-        for (int i = 0; i < track2.size(); i++) {
-            MidiEvent event = track2.get(i);
-            System.out.print(event.getTick());
-            if ((event.getTick() != note2TickStart) && (event.getTick() != note2.getDurationTicks() + note2TickStart) && (event.getTick() != pattern.getPatternLength())) {
-                CorrectEventFound2 = false;
-                break;
-            } else {
-                CorrectEventFound2 = true;
-            }
-        }
-        assertTrue(CorrectEventFound1, "Correct events not found for pattern 1");
-        assertTrue(CorrectEventFound2, "Correct events not found for pattern 2");
+        
+        assertTrue(CorrectEventsFound, "Correct events not found for pattern 1");
     }
 
     @Test
@@ -167,9 +165,9 @@ class PatternTest {
         Sequence sequence = pattern.getSequence();
 
         // Same track because the notes have the same height
-        Track track = sequence.getTracks()[note1.getMidiNoteNumber()];
+        Track track = sequence.getTracks()[pattern.getChannel()];
 
-        boolean CorrectEventsFound = false;
+        boolean CorrectEventsFound = true;
         for (int i = 0; i < track.size(); i++) {
             MidiEvent event = track.get(i);
             System.out.print(event.getTick());
@@ -179,9 +177,7 @@ class PatternTest {
                         && (event.getTick() != pattern.getPatternLength())){
                 CorrectEventsFound = false;
                 break;
-            } else {
-                CorrectEventsFound = true;
-            }
+            } 
         }
 
         assertTrue(CorrectEventsFound, "Correct events not found");
@@ -201,9 +197,9 @@ class PatternTest {
         Sequence sequence = pattern.getSequence();
 
         // Same track because the notes have the same height
-        Track track = sequence.getTracks()[note1.getMidiNoteNumber()];
+        Track track = sequence.getTracks()[pattern.getChannel()];
 
-        boolean CorrectEventsFound = false;
+        boolean CorrectEventsFound = true;
         for (int i = 0; i < track.size(); i++) {
             MidiEvent event = track.get(i);
             System.out.print(event.getTick());
@@ -212,8 +208,6 @@ class PatternTest {
                 && (event.getTick() != pattern.getPatternLength())){
                 CorrectEventsFound = false;
                 break;
-            } else {
-                CorrectEventsFound = true;
             }
         }
         assertTrue(CorrectEventsFound, "Event not suppressed");
@@ -222,16 +216,19 @@ class PatternTest {
     @Test
     public void testRemoveNoteInTrack2() throws InvalidMidiDataException, InvalidNoteException {
         Pattern pattern = new Pattern();
-        Note note1 = new Note(3, 7, 100, 500);
+        Note note1 = new Note(3, 7, 100, 5000);
         Note note2 = new Note(3, 7, 100, 390);
         int note1TickStart = 20;
         int note2TickStart = 120;
         pattern.addNote(note1, note1TickStart);
         pattern.addNote(note2, note2TickStart);
 
-        pattern.removeNote(note1, note1TickStart);
-        pattern.removeNote(note2, note2TickStart);
+        assertEquals(5020, pattern.getPatternLength());
 
+        pattern.removeNote(note1, note1TickStart);
+        assertEquals(510, pattern.getPatternLength());
+    
+        pattern.removeNote(note2, note2TickStart);
         assertEquals(0, pattern.getPatternLength());
     }
 
@@ -249,9 +246,9 @@ class PatternTest {
 
         Sequence sequence = pattern.getSequence();
 
-        Track track = sequence.getTracks()[note1.getMidiNoteNumber()];
+        Track track = sequence.getTracks()[pattern.getChannel()];
 
-        boolean CorrectEventsFound = false;
+        boolean CorrectEventsFound = true;
         for (int i = 0; i < track.size(); i++) {
             MidiEvent event = track.get(i);
             System.out.print(event.getTick());
@@ -261,8 +258,6 @@ class PatternTest {
                         && (event.getTick() != pattern.getPatternLength())){
                 CorrectEventsFound = false;
                 break;
-            } else {
-                CorrectEventsFound = true;
             }
         }
 

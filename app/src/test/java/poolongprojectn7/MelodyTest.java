@@ -13,7 +13,7 @@ import javax.sound.midi.*;
 
 class MelodyTest {
 
-    // The file path where the temporary MIDI file will be stored
+    /* The file path where the temporary MIDI file will be stored */
     private static String filePath = System.getProperty("user.dir") + "/src/test/testMidi";
 
     @BeforeAll
@@ -48,14 +48,14 @@ class MelodyTest {
         Note solb2 = new Note(6, 6, 100, 500);
         Note fa2 = new Note(6, 4, 100, 500);
         Note re2 = new Note(6, 3, 100, 500);
-        
+
         Note reb0 = new Note(5, 1, 100, 500);
         Note fa0 = new Note(5, 4, 100, 500);
         Note si0 = new Note(4, 11, 100, 500);
         Note la0 = new Note(4, 9, 100, 500);
-        
+
         try {
-            // High notes
+            /* High notes */
             pattern.addNote(solb2, 0);
             pattern.addNote(fa2, 50);
             pattern.addNote(fa2, 200);
@@ -86,7 +86,7 @@ class MelodyTest {
             pattern.addNote(si2, 3800);
             pattern.addNote(si2, 3950);
 
-            // Low notes
+            /* Low notes */
             pattern.addNote(reb0, 0);
             pattern.addNote(reb0, 50);
             pattern.addNote(reb0, 200);
@@ -111,10 +111,11 @@ class MelodyTest {
             pattern.addNote(si0, 3500);
             pattern.addNote(si0, 3650);
             pattern.addNote(si0, 3800);
-            pattern.addNote(la0, 3950);    
+            pattern.addNote(la0, 3950);   
             
-            // Save the pattern
-            pattern.savePattern(filePath + "/test.mid");
+            
+            /* Save the pattern */
+            pattern.save(filePath, "test");
 
         } catch (InvalidNoteException | IOException e) {
             e.printStackTrace();
@@ -142,14 +143,14 @@ class MelodyTest {
 
     @Test
     public void testReadAndWrite() throws InvalidMidiDataException, IOException {
-            // Create and play a new sequence
-            setUp();
+            /* Create and play a new sequence */
             Pattern pattern = new Pattern();   
+            pattern.setInstrument(34);
             createAndSaveMidi(pattern);
-            playSequence(pattern);
 
-            // Play a sequence saved in the past
-            pattern = new Pattern(filePath + "/test.mid");
+            /* Play a sequence saved in the past */
+            pattern = new Pattern(filePath, "test");
+            pattern.export(filePath, "test_wav");
             playSequence(pattern);
 
             assertTrue(true);
