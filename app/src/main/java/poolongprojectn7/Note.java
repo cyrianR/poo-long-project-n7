@@ -119,4 +119,12 @@ public class Note {
         this.durationTicks = durationTicks;
     }
 
+    /*
+     * Get the note as follows: (octave, index, velocity, duration).
+     */
+    public String toString() {
+        return "(" + this.octave + ", " + this.noteIndex
+        + ", " + this.velocity + ", " + this.durationTicks + ")";
+    }
+
 }
