@@ -1,25 +1,31 @@
 package poolongprojectn7.pianoroll;
 
+import poolongprojectn7.Pattern;
 
 public class PianoRollModelLeandre {
 
-    private Integer currentOctave = 4;
-    private double[][] actives;
+    final int PIANO_LENGTH = 52;
+    final int PIANO_HEIGHT = 12;
+
+    private Pattern pattern;
+    private int currentOctave = 4;
+    private int[][] activeNotes;
 
     public PianoRollModelLeandre(){
-        for(int i = 0; i < 12; i++){
-            for(int j = 0; j < 52; j++){
-                this.actives[i][j] = 0.0;
+        
+        for(int i = 0; i < PIANO_HEIGHT; i++){
+            for(int j = 0; j < PIANO_LENGTH; j++){
+                this.activeNotes[i][j] = 0.0;
             }
         }
     }
     
-    public void setActive(int i, int j, double d){
-        actives[i][j] = d;
+    public void setActiveNote(int i, int j, double d){
+        activeNotes[i][j] = d;
     }
 
-    public double getActive(int i, int j){
-        return actives[i][j];
+    public double getActiveNotes(int i, int j){
+        return activeNotes[i][j];
     }
 
     public int getOctave(){
@@ -27,6 +33,8 @@ public class PianoRollModelLeandre {
     }
 
     public void setOctave(int i){
-        currentOctave = i;
+        if (i <= 10 && i >=0) {
+            currentOctave = i;
+        }
     }
 }
