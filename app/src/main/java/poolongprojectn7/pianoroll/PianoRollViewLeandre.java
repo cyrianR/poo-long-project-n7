@@ -14,20 +14,18 @@ public class PianoRollViewLeandre extends GridPane{
         this.rectangles = new Rectangle[12][52];
         for(int i = 0; i < 12; i++){
             for(int j = 0; j < 52; j++){
-                rectangles[i][j] = new Rectangle(30,30,Color.GREEN);
-                rectangles[i][j].setOpacity(0.0);
+                Color bg = i%2 == 0 ? Color.WHITE : Color.GRAY;
+                rectangles[i][j] = new Rectangle(30,30,bg);
                 this.add(rectangles[i][j], j, i);
             }
         }
         
     }
 
-    public void update(){
-        for(int i = 0; i < 12; i++){
-            for(int j = 0; j < 52; j++){
-                this.rectangles[i][j].setOpacity(model.getActive(i,j));
-            }
-        }
+    public void update(int i, int j){
+        Color bg = i%2 == 0 ? Color.WHITE : Color.GRAY;
+        bg = model.getActive(i, j) < 0.5 ? bg : Color.GREEN;
+        this.rectangles[i][j].setFill(bg);
     }
 
 
