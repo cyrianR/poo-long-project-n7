@@ -13,7 +13,7 @@ import javafx.scene.shape.*;
 import javafx.scene.text.*;
 import javafx.event.*;
 
-public class PianoRollControllerLeandre extends Pane{
+public class PianoRollController extends Pane{
 
     protected final Background WHITE_BACKGROUD = new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
     protected final Background BLACK_BACKGROUD = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
@@ -27,12 +27,12 @@ public class PianoRollControllerLeandre extends Pane{
 
 
 
-    private PianoRollModelLeandre model;
-    private PianoRollViewLeandre view;
+    private PianoRollModel model;
+    private PianoRollView view;
     private StackPane partition;
     private final GridPane buttonPartition = new GridPane();
 
-    public PianoRollControllerLeandre(PianoRollModelLeandre model, PianoRollViewLeandre view){
+    public PianoRollController(PianoRollModel model, PianoRollView view){
         this.model = model;
         this.view = view;
         partition = new StackPane(view,buttonPartition);

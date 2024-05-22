@@ -4,12 +4,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
-public class PianoRollViewLeandre extends GridPane{
+public class PianoRollView extends GridPane{
     
-    private PianoRollModelLeandre model;
+    private PianoRollModel model;
     private Rectangle[][] rectangles;
 
-    public PianoRollViewLeandre(PianoRollModelLeandre model) {
+    public PianoRollView(PianoRollModel model) {
         this.model = model;
         this.rectangles = new Rectangle[12][52];
         for(int i = 0; i < 12; i++){
