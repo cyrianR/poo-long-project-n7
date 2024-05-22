@@ -2,6 +2,8 @@ package poolongprojectn7.pianoroll;
 
 import javafx.geometry.*;
 
+import java.util.*;
+
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
@@ -11,24 +13,31 @@ import javafx.scene.shape.*;
 import javafx.scene.text.*;
 import javafx.event.*;
 
-public class PianoRoll extends HBox{
-    private final Background WHITE_BACKGROUD = new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
-    private final Background BLACK_BACKGROUD = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
-    private final Background GREEN_BACKGROUD = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY));
-    private final Background GRAY_BACKGROUD = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY));
-    private final Border BLACK_BORDER = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
-    private final Border WHITE_BORDER = new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
-    private final Border GRAY_BORDER = new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
-    private final static String[] ids = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
-    //private static final Map<String,Integer> notes = new HashMap<String,Integer>();
-    private Integer octave = 4;
-    private GridPane partition = new GridPane();
+public class PianoRollControllerLeandre extends Pane{
 
-    public PianoRoll() {
+    protected final Background WHITE_BACKGROUD = new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
+    protected final Background BLACK_BACKGROUD = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
+    protected final Background GREEN_BACKGROUD = new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY));
+    protected final Background GRAY_BACKGROUD = new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY));
+    protected final Border BLACK_BORDER = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+    protected final Border WHITE_BORDER = new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+    protected final Border GRAY_BORDER = new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+    private final String[] NOTE_LETTERS = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
+
+
+
+    private PianoRollModelLeandre model;
+    private PianoRollViewLeandre view;
+    private StackPane partition;
+    private final GridPane buttonPartition = new GridPane();
+
+    public PianoRollControllerLeandre(PianoRollModelLeandre model, PianoRollViewLeandre view){
+        this.model = model;
+        this.view = view;
+        partition = new StackPane(view,buttonPartition);
         Group root = new Group();
         for(int i = 0; i < 12; i++){
-            //notes.put(ids[i],i);
-            root.getChildren().add(newButton(50, 30 * i, ids[i]));
+            root.getChildren().add(newButton(50, 30 * i, NOTE_LETTERS[i]));
         }
         StackPane piano = new StackPane(root);
         HBox octaves = new HBox(new Separator(Orientation.VERTICAL));
@@ -41,7 +50,7 @@ public class PianoRoll extends HBox{
                 square.setBackground(bg);
                 square.setBorder(border);
                 square.setOnAction(handlerPartition);
-                partition.add(square, j, i);
+                buttonPartition.add(square, j, i);
                 if (j%4==0 && i == 0){
                     Pane panel = new Pane();
                     Text number = new Text("" + (j/4 + 1));
@@ -96,7 +105,7 @@ public class PianoRoll extends HBox{
         button.setOnAction(handlerOctave);
         return button;
     }
-
+    
     EventHandler<ActionEvent> handlerNotes = event -> {
         Button source = (Button) event.getSource();
         System.out.println(source.getText());
@@ -105,23 +114,20 @@ public class PianoRoll extends HBox{
     EventHandler<ActionEvent> handlerOctave = event -> {
         Button source = (Button) event.getSource();
         if(source.getText().equals("-")){
-            octave--;
+            model.setOctave(model.getOctave() - 1);
         }else{
-            octave++;
+            model.setOctave(model.getOctave() + 1);
         }
-        System.out.println(octave);
+        System.out.println(model.getOctave());
     };
 
     EventHandler<ActionEvent> handlerPartition = event -> {
         Button source = (Button) event.getSource();
         Integer row = GridPane.getRowIndex(source);
         int r = row == null ? 0 : row;
-        if (source.getBackground() == GREEN_BACKGROUD){
-            Background bg = r%2 == 0 ? WHITE_BACKGROUD : GRAY_BACKGROUD;
-            source.setBackground(bg);
-        }else{
-            source.setBackground(GREEN_BACKGROUD);
-        }
-
+        Integer column = GridPane.getColumnIndex(source);
+        int c = column == null ? 0 : column;
+        model.setActive(r,c, 1.0 - model.getActive(r,c));
+        view.update();
     };
 }
