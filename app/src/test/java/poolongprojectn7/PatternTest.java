@@ -15,7 +15,7 @@ import java.io.IOException;
 class PatternTest {
 
     /* The file path where the temporary MIDI file will be stored */
-    private static String filePath = System.getProperty("user.dir") + "/src/test/testMidi";
+    private static String filePath = System.getProperty("user.dir") + "/src/test/testMidi/";
 
     @BeforeAll
     static void setUp() {
@@ -51,12 +51,12 @@ class PatternTest {
         try {
         patternToSave.addNote(la, 0);
         patternToSave.addNote(si, 300);
-        patternToSave.savePattern(filePath + "/patternsaved.mid");
+        patternToSave.save(filePath, "patternsaved.mid");
         } catch (InvalidNoteException | IOException e) {
             e.printStackTrace();
         }
         
-        Pattern pattern = new Pattern(filePath + "/patternsaved.mid");
+        Pattern pattern = new Pattern(filePath, "patternsaved.mid");
        
         assertNotNull(pattern.getSequence());
         assertEquals(500, pattern.getPatternLength());

@@ -1,6 +1,10 @@
 package poolongprojectn7;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.sound.midi.*;
 import java.io.File;
@@ -35,6 +39,8 @@ public class Pattern {
     private int instrument;
     /* Path to the midi file of the pattern */
     private String path;
+    /* Link between notes and the moment when they are called */
+    private Map<Long, List<Note>> noteMap;
 
     /**
      * Create a new pattern.
@@ -43,6 +49,7 @@ public class Pattern {
         this.path = null; 
         this.patternLength = 0;
         this.instrument = 0;
+        this.noteMap = new HashMap<>();
         try {
             this.sequence = initSequence();
         /* If the specified sequence's divisionType is not valid */
@@ -64,6 +71,8 @@ public class Pattern {
         this.sequence = MidiSystem.getSequence(new java.io.File(this.path));
         this.sequenceTracks = this.sequence.getTracks();
         this.patternLength = 0;
+        this.noteMap = new HashMap<>();
+        this.noteMap = getNoteMap(this.sequenceTracks);
         setInstrument(getInstrument(this.sequence));
         updatePatternLength();
     }
@@ -81,20 +90,49 @@ public class Pattern {
     }
 
     /**
+     * Add a note to the noteMap and creates a new ArrayList if the key does not exist.
+     * @param note the note
+     * @param startTick the start tick of the note
+     */
+    private void addNoteToMap(Note note, Long startTick) {
+        this.noteMap.computeIfAbsent(startTick, k -> new ArrayList<>()).add(note);
+    }
+
+    /**
+     * Remove a note to the noteMap if it exists.
+     * @param note the note
+     * @param startTick the start tick of the note
+     */
+    private void removeNoteToMap(Note note, Long startTick) {
+        List<Note> notes = this.noteMap.get(startTick);
+        /* Remove the note If there is a note with the given startTick */
+        if (notes != null) {
+            notes.remove(note);
+            /* Remove the startTick entry of the map if the list becomes empty */
+            if (notes.isEmpty()) {
+                this.noteMap.remove(startTick);
+            }
+        }
+
+    }
+
+    /**
      * Add a note to the pattern at a certain time.
      * @param note note to be added
-     * @param tickStart starting time of the note in ticks
+     * @param startTick starting time of the note in ticks
      * @throws InvalidNoteException if the note attributs are incorrect
      */
-    public void addNote(Note note, long tickStart) throws InvalidNoteException {
+    public void addNote(Note note, long startTick) throws InvalidNoteException {
         if (note.getNoteIndex() > NOTE_INDEX_MAX) {
             throw new InvalidNoteException("Midi note number or note velocity is invalid.");
         }
-        
+        /* Add the note to the note map */
+        addNoteToMap(note, startTick);
+
         int midiNote = note.getMidiNoteNumber();
         int velocity = note.getVelocity();
         long duration = note.getDurationTicks();
-        long endTick = tickStart + duration;
+        long endTick = startTick + duration;
 
         /* MidiMessage for note-on and note-off event */
         MidiMessage noteOnMessage;
@@ -107,7 +145,7 @@ public class Pattern {
         }
 
         /* MidiEvent for note-on and note-off messages */
-        MidiEvent noteOnEvent = new MidiEvent(noteOnMessage, tickStart);
+        MidiEvent noteOnEvent = new MidiEvent(noteOnMessage, startTick);
         MidiEvent noteOffEvent = new MidiEvent(noteOffMessage, endTick);
         
         /* Add note events to the corresponding track */
@@ -120,9 +158,12 @@ public class Pattern {
     /**
      * Remove a specific note from the pattern.
      * @param note the note to be removed
-     * @param tickStart the starting tick of the note
+     * @param startTick the starting tick of the note
      */
-    public void removeNote(Note note, long tickStart) {
+    public void removeNote(Note note, long startTick) {
+        /* Remove the note to the note map */
+        removeNoteToMap(note, startTick);
+        
         int midiNote = note.getMidiNoteNumber();
         long duration = note.getDurationTicks();
         
@@ -136,11 +177,11 @@ public class Pattern {
                 ShortMessage shortMessage = (ShortMessage) message;
                 /* Remove the note start */
                 if (shortMessage.getData1() == midiNote
-                        && event.getTick() == tickStart
+                        && event.getTick() == startTick
                         && shortMessage.getCommand() == ShortMessage.NOTE_ON) {
                     this.sequenceTracks[CHANNEL].remove(event);
                 } else if (shortMessage.getData1() == midiNote
-                        && event.getTick() == tickStart + duration
+                        && event.getTick() == startTick + duration
                         && shortMessage.getCommand() == ShortMessage.NOTE_OFF) {
                     this.sequenceTracks[CHANNEL].remove(event);
                 }
@@ -149,7 +190,7 @@ public class Pattern {
         /* Remove the end of track event if present */
         for (int i = 0; i < noteTrack.size(); i++) {
             MidiEvent event = noteTrack.get(i);
-            if (event.getTick() == tickStart + duration) {
+            if (event.getTick() == startTick + duration) {
                 this.sequenceTracks[CHANNEL].remove(event);
                 break;
             }
@@ -162,7 +203,6 @@ public class Pattern {
      */
     private void updatePatternLength() {
         long maxEventTick = 0;
-
         Track noteTrack = this.sequenceTracks[CHANNEL];
 
         for (int i = 0; i < noteTrack.size(); i++) {
@@ -172,7 +212,6 @@ public class Pattern {
                 maxEventTick = eventTick;
             }
         }
-
         this.patternLength = maxEventTick;
     }
 
@@ -223,7 +262,7 @@ public class Pattern {
 
     /**
      * Change the instrument of the pattern
-     * @param instrument the new instrument
+     * @param instrument the number if the instrument
      * @throws InvalidMidiDataException if MIDI data is not valid
      */
     public void setInstrument(int instrument) throws InvalidMidiDataException {
@@ -249,6 +288,60 @@ public class Pattern {
     public int getChannel() {
         return this.CHANNEL;
     }
+
+    /**
+     * Obtains the note map.
+     * @return the note map
+     */
+    public Map<Long, List<Note>> getNoteMap() {
+        return this.noteMap;
+    }
+
+    /**
+     * Obtains the note map from a sequence of tracks.
+     * @param sequenceTracks the sequence of tracks
+     * @return the note map
+     */
+    private Map<Long, List<Note>> getNoteMap(Track[] sequenceTracks) {
+        Map<Long, List<Note>> notes = new HashMap<>();
+        HashMap<Integer, List<Long>> activeNotes = new HashMap<>();    
+
+        Track noteTrack = sequenceTracks[CHANNEL];
+
+        /* Browse through the events of the track */
+        for (int i = 0; i < noteTrack.size(); i++) {
+            MidiEvent event = noteTrack.get(i);
+            MidiMessage message = event.getMessage();
+            if (message instanceof ShortMessage) {
+                ShortMessage shortMessage = (ShortMessage) message;
+
+                int key = shortMessage.getData1();
+                int velocity = shortMessage.getData2();
+                long tick = event.getTick();
+                
+                /* Save the startTick if the note is activated */
+                if (shortMessage.getCommand() == ShortMessage.NOTE_ON && velocity > 0) {
+                    activeNotes.computeIfAbsent(key, k -> new ArrayList<>()).add(tick);
+                } 
+                /* Get the startTick and save the note otherwise */
+                else if (shortMessage.getCommand() == ShortMessage.NOTE_OFF || 
+                            (shortMessage.getCommand() == ShortMessage.NOTE_ON && velocity == 0)) {
+                    List<Long> startTicks = activeNotes.get(key);
+                    if (startTicks != null && !startTicks.isEmpty()) {
+                        Long startTick = startTicks.remove(0);
+                        if (startTicks.isEmpty()) {
+                            activeNotes.remove(key);
+                        }
+                        if (startTick != null) {
+                            notes.computeIfAbsent(startTick, k -> new ArrayList<>())
+                                    .add(new Note(key / 12, key % 12, velocity, tick - startTick));
+                        }
+                    }
+                }
+            }
+        }
+        return notes;
+    }    
 
     /**
      * Save the pattern's sequence in a midi file.

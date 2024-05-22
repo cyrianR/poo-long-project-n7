@@ -48,7 +48,7 @@ class MelodyTest {
         Note solb2 = new Note(6, 6, 100, 500);
         Note fa2 = new Note(6, 4, 100, 500);
         Note re2 = new Note(6, 3, 100, 500);
-        
+
         Note reb0 = new Note(5, 1, 100, 500);
         Note fa0 = new Note(5, 4, 100, 500);
         Note si0 = new Note(4, 11, 100, 500);
