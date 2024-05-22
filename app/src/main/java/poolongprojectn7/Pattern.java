@@ -3,6 +3,11 @@ package poolongprojectn7;
 import java.io.IOException;
 
 import javax.sound.midi.*;
+import java.io.File;
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * Represents a pattern used by a piano roll to
@@ -28,29 +33,35 @@ public class Pattern {
     private long patternLength;
     /* Instrument used in the pattern */
     private int instrument;
+    /* Path to the midi file of the pattern */
+    private String path;
 
     /**
      * Create a new pattern.
      */
     public Pattern() {
+        this.path = null; 
+        this.patternLength = 0;
+        this.instrument = 0;
         try {
             this.sequence = initSequence();
+        /* If the specified sequence's divisionType is not valid */
         } catch (InvalidMidiDataException e) {
-            /* If the specified sequence's divisionType is not valid */
             e.printStackTrace();
         }
-        this.patternLength = 0;
-        this.instrument = 0;    
     }
 
     /**
      * Load a pattern from a midi file passed in argument.
-     * @param path path to the midi file containing the midi sequence
+     * @param filePath the path of the file
+     * @param fileName the name of the file
      * @throws InvalidMidiDataException if the File does not point to valid MIDI file data recognized by the system
      * @throws IOException if an I/O exception occurs
+     * Example: Pattern pattern = new Patten("/home/usr/Music/", "test");
      */
-    public Pattern(String path) throws InvalidMidiDataException, IOException {
-        this.sequence = MidiSystem.getSequence(new java.io.File(path));
+    public Pattern(String filePath, String fileName) throws InvalidMidiDataException, IOException {
+        this.path = filePath + fileName + ".mid";
+        this.sequence = MidiSystem.getSequence(new java.io.File(this.path));
         this.sequenceTracks = this.sequence.getTracks();
         this.patternLength = 0;
         setInstrument(getInstrument(this.sequence));
@@ -131,7 +142,6 @@ public class Pattern {
                 } else if (shortMessage.getData1() == midiNote
                         && event.getTick() == tickStart + duration
                         && shortMessage.getCommand() == ShortMessage.NOTE_OFF) {
-
                     this.sequenceTracks[CHANNEL].remove(event);
                 }
             }
@@ -145,15 +155,6 @@ public class Pattern {
             }
         }
         updatePatternLength();
-    }
-
-    /**
-     * Save the pattern's sequence in a midi file.
-     * @param path the midi file path to save the pattern's sequence (.mid)
-     * @throws IOException if the given file path is incorrect
-     */
-    public void savePattern(String path) throws IOException {
-        MidiSystem.write(sequence, 1, new java.io.File(path));
     }
 
     /**
@@ -247,6 +248,34 @@ public class Pattern {
      */
     public int getChannel() {
         return this.CHANNEL;
+    }
+
+    /**
+     * Save the pattern's sequence in a midi file.
+     * @param filePath the path of the file
+     * @param fileName the name of the file
+     * @throws IOException if the given file path is incorrect
+     * Example: patten.save("/home/usr/Music/", "test");
+     */
+    public void save(String filePath, String fileName) throws IOException {
+        this.path = filePath + fileName + ".mid";
+        MidiSystem.write(this.sequence, 1, new java.io.File(this.path));
+    }
+
+    /**
+     * Export the pattern to a .wav file.
+     * @param filePath the path of the file
+     * @param fileName the name of the file
+     * Example: patten.export("/home/usr/Music/", "test");
+     */
+    public void export(String filePath, String fileName) {
+        try {
+            AudioInputStream stream = AudioSystem.getAudioInputStream(new File(this.path));
+            AudioSystem.write(stream, AudioFileFormat.Type.WAVE, new File(filePath + fileName + ".wav"));
+            stream.close();
+        } catch (UnsupportedAudioFileException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

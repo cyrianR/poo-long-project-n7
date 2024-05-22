@@ -115,7 +115,7 @@ class MelodyTest {
             
             
             /* Save the pattern */
-            pattern.savePattern(filePath + "/test.mid");
+            pattern.save(filePath, "test");
 
         } catch (InvalidNoteException | IOException e) {
             e.printStackTrace();
@@ -145,11 +145,12 @@ class MelodyTest {
     public void testReadAndWrite() throws InvalidMidiDataException, IOException {
             /* Create and play a new sequence */
             Pattern pattern = new Pattern();   
-            pattern.setInstrument(8);
+            pattern.setInstrument(34);
             createAndSaveMidi(pattern);
 
             /* Play a sequence saved in the past */
-            pattern = new Pattern(filePath + "/test.mid");
+            pattern = new Pattern(filePath, "test");
+            pattern.export(filePath, "test_wav");
             playSequence(pattern);
 
             assertTrue(true);
