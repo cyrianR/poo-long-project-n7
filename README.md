@@ -12,7 +12,7 @@
   <h3 align="center">N7 Studio</h3>
 
   <p align="center">
-    Little description
+     A student-made digital audio workstation.
     <br />
     <a href=""><strong>Documentation</strong></a>
     <br />
