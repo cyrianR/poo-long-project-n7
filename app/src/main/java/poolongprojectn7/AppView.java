@@ -11,6 +11,7 @@ import javafx.scene.control.TreeView;
 
 public class AppView extends VBox {
 
+    private AppModel model;
     private ToolBar toolBar;
     private PianoRoll piano;
     private PlaylistComponent playlist;
@@ -19,6 +20,7 @@ public class AppView extends VBox {
 
     /** Constructor view part of the MVC of the application. */
     public AppView(AppModel model, Runnable handler) {
+        this.model = model;
 
         // Creating toolbar
         this.toolBar = new ToolBarComponent(this).getToolbar();
@@ -28,6 +30,10 @@ public class AppView extends VBox {
         this.pianoView = new HBox(this.browser, this.piano);
 
         this.getChildren().addAll(this.toolBar, this.playlist);
+    }
+
+    public AppModel getModel() {
+        return this.model;
     }
 
     // Method to switch to Overview view
