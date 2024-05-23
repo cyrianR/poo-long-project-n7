@@ -2,8 +2,6 @@ package poolongprojectn7.pianoroll;
 
 import javafx.geometry.*;
 
-import java.util.*;
-
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
@@ -46,7 +44,6 @@ public class PianoRollController extends Pane{
             for(int j = 0; j < 52; j++){
                 Button square = new Button();
                 square.setPrefSize(30, 30);
-                //Background bg = i%2 == 0 ? WHITE_BACKGROUD : GRAY_BACKGROUD;
                 Border border = i%2 == 0 ? GRAY_BORDER : WHITE_BORDER;
                 square.setBackground(TRANSPARENT_BACKGROUD);
                 square.setBorder(border);
@@ -109,7 +106,6 @@ public class PianoRollController extends Pane{
     
     EventHandler<ActionEvent> handlerNotes = event -> {
         Button source = (Button) event.getSource();
-        System.out.println(source.getText());
     };
 
     EventHandler<ActionEvent> handlerOctave = event -> {
@@ -119,7 +115,6 @@ public class PianoRollController extends Pane{
         }else{
             model.setOctave(model.getOctave() + 1);
         }
-        System.out.println(model.getOctave());
     };
 
     EventHandler<ActionEvent> handlerPartition = event -> {
@@ -128,7 +123,7 @@ public class PianoRollController extends Pane{
         int r = row == null ? 0 : row;
         Integer column = GridPane.getColumnIndex(source);
         int c = column == null ? 0 : column;
-        model.setActive(r,c, 1.0 - model.getActive(r,c));
+        model.changeNoteState(r, c);
         view.update(r,c);
     };
 }

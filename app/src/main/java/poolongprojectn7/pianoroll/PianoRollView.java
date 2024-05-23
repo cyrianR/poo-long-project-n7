@@ -24,7 +24,7 @@ public class PianoRollView extends GridPane{
 
     public void update(int i, int j){
         Color bg = i%2 == 0 ? Color.WHITE : Color.GRAY;
-        bg = model.getActive(i, j) < 0.5 ? bg : Color.GREEN;
+        bg = model.isNoteActive(i, j) ? bg : Color.GREEN;
         this.rectangles[i][j].setFill(bg);
     }
 
