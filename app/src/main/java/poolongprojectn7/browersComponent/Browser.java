@@ -18,7 +18,7 @@ public class Browser extends TreeView<String> {
     private Pattern pattern;
     private TreeView<String> browser;
     private AppView view;
-    // liste de test
+    // liste de filtre des clicks
     private HashMap<String, Integer> instrumentHashMap = new HashMap<String, Integer>();
 
 
