@@ -1,7 +1,6 @@
 package poolongprojectn7.browersComponent;
 
 import poolongprojectn7.AppView;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.sound.midi.Instrument;
