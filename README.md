@@ -9,7 +9,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Project name</h3>
+  <h3 align="center">N7 Studio</h3>
 
   <p align="center">
     Little description
