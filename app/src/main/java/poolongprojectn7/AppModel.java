@@ -15,7 +15,6 @@ public class AppModel {
     // precondition : 0 <= index < 10
     public void setCurrentPattern(int index) {
         index = Math.abs(index) % 10; // For robustness
-        System.out.println(index);
         this.selectedTrack = trackSaves[index];
     }
 

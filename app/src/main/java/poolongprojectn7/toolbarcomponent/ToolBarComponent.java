@@ -12,7 +12,8 @@ import javafx.scene.image.ImageView;
 public class ToolBarComponent extends ToolBar {
     private ToolBar toolbar;            // Attribute of ToolBar type wich is the tool bar of the application
     private AppView view;
- 
+    
+    @SuppressWarnings("unchecked")
     public ToolBarComponent(AppView view) {                 // Creation of the tool bar
         this.toolbar = new ToolBar();                       // Initialisation
         this.view = view;
@@ -36,7 +37,6 @@ public class ToolBarComponent extends ToolBar {
         // Update selected track on selection
         trackSelecter.setOnAction(e -> {
             int trackSelected = Integer.parseInt(((String) trackSelecter.getValue()).split(" ")[1]);
-            // System.out.println(trackSelected);
             this.view.getModel().setCurrentPattern(trackSelected);
         });
 

@@ -59,7 +59,7 @@ public class AppView extends VBox {
     // Method to switch to Composition View view
     public void switchToCompositionView() {
         File f = new File(exportFilePath + "/" + this.model.getSelectedTrack() + ".mid");
-
+        System.out.println(f.exists());
         this.pianoView.getChildren().remove(this.piano);
         if(f.exists() && !f.isDirectory()) { 
             // Import current track pattern
@@ -67,7 +67,16 @@ public class AppView extends VBox {
             try {
                 this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
             }
-            catch (InvalidMidiDataException | IOException e ) {
+            // catch (InvalidMidiDataException | IOException e ) {
+            //     System.out.println("err");
+            //     this.piano = new PianoRoll();
+            // }
+            catch (InvalidMidiDataException e ) {
+                System.out.println("Midi exc");
+                this.piano = new PianoRoll();
+            }
+            catch (IOException e ) {
+                System.out.println("IO");
                 this.piano = new PianoRoll();
             }
         }
