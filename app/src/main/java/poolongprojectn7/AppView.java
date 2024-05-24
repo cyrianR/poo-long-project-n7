@@ -2,6 +2,7 @@ package poolongprojectn7;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import poolongprojectn7.AppModel.View;
 import poolongprojectn7.PlaylistComponent.PlaylistComponent;
 import poolongprojectn7.browersComponent.Browser;
 import poolongprojectn7.pianoroll.PianoRoll;
@@ -16,12 +17,14 @@ public class AppView extends VBox {
     private PlaylistComponent playlist;
     private TreeView<String> browser;
     private HBox pianoView;
+    private AppModel model;
 
     /** Constructor view part of the MVC of the application. */
     public AppView(AppModel model, Runnable handler) {
+        this.model = model;
 
         // Creating toolbar
-        this.toolBar = new ToolBarComponent(this).getToolbar();
+        this.toolBar = new ToolBarComponent(this, model).getToolbar();
         this.piano = new PianoRoll();
         this.playlist = new PlaylistComponent();
         this.browser = new Browser(this).getBrowser();
@@ -32,15 +35,15 @@ public class AppView extends VBox {
 
     // Method to switch to Overview view
     public void switchToOverview() {
+        this.model.setCurrentView(View.OVERVIEW);
         this.getChildren().removeAll(this.playlist, this.pianoView);
-        // this.getChildren().removeAll(this.piano, this.playlist, this.browser);
         this.getChildren().addAll(this.playlist);
     }
 
     // Method to switch to Composition View view
     public void switchToCompositionView() {
+        this.model.setCurrentView(View.COMPOSITION);
         this.getChildren().removeAll(this.pianoView, this.playlist);
-        // this.getChildren().removeAll(this.piano, this.playlist, this.browser);
         this.getChildren().addAll(this.pianoView);
     }
 }
