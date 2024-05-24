@@ -18,4 +18,9 @@ public class AppModel {
         System.out.println(index);
         this.selectedTrack = trackSaves[index];
     }
+
+    public String getSelectedTrack() {
+        return this.selectedTrack;
+    }
+
 }

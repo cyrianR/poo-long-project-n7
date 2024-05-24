@@ -6,6 +6,7 @@ import poolongprojectn7.PlaylistComponent.PlaylistComponent;
 import poolongprojectn7.browersComponent.Browser;
 import poolongprojectn7.pianoroll.PianoRoll;
 import poolongprojectn7.toolbarcomponent.ToolBarComponent;
+import java.io.File;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeView;
 
@@ -41,16 +42,27 @@ public class AppView extends VBox {
 
     // Method to switch to Overview view
     public void switchToOverview() {
+        // Export current track pattern to midi
+        // this.piano.getModel().getPattern().export(exportFilePath, this.model.getSelectedTrack());
+
         this.getChildren().removeAll(this.playlist, this.pianoView);
-        // this.getChildren().removeAll(this.piano, this.playlist, this.browser);
         this.getChildren().addAll(this.playlist);
     }
 
     // Method to switch to Composition View view
     public void switchToCompositionView() {
-        // this.piano.
+        // Import current track pattern or create one
+        // File f = new File(exportFilePath + this.model.getSelectedTrack());
+        // System.out.println(f.toString());
+        // if(f.exists() && !f.isDirectory()) { 
+        //     // import
+
+        // }
+        // else {
+        //     // nouveau
+        // }
+
         this.getChildren().removeAll(this.pianoView, this.playlist);
-        // this.getChildren().removeAll(this.piano, this.playlist, this.browser);
         this.getChildren().addAll(this.pianoView);
     }
 }
