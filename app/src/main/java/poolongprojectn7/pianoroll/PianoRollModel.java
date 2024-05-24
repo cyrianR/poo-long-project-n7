@@ -40,6 +40,7 @@ public class PianoRollModel {
      * Create a new piano roll model.
      */
     public PianoRollModel() {
+        this.activeNotes = new boolean[PIANO_HEIGHT + 1][PIANO_LENGTH + 1];
         this.pattern = new Pattern();
         initNonActiveNotes();
     }
@@ -52,6 +53,7 @@ public class PianoRollModel {
      * @throws IOException if an I/O exception occurs
      */
     public PianoRollModel(String filePath, String fileName) throws InvalidMidiDataException, IOException {
+        this.activeNotes = new boolean[PIANO_HEIGHT + 1][PIANO_LENGTH + 1];
         this.pattern = new Pattern(filePath, fileName);
         initNonActiveNotes();
         initImportedNotes();
