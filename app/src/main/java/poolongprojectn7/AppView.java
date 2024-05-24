@@ -2,6 +2,7 @@ package poolongprojectn7;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import poolongprojectn7.AppModel.View;
 import poolongprojectn7.PlaylistComponent.PlaylistComponent;
 import poolongprojectn7.browersComponent.Browser;
 import poolongprojectn7.pianoroll.PianoRoll;
@@ -26,13 +27,14 @@ public class AppView extends VBox {
     private PlaylistComponent playlist;
     private TreeView<String> browser;
     private HBox pianoView;
+    private AppModel model;
 
     /** Constructor view part of the MVC of the application. */
     public AppView(AppModel model, Runnable handler) {
         this.model = model;
 
         // Creating toolbar
-        this.toolBar = new ToolBarComponent(this).getToolbar();
+        this.toolBar = new ToolBarComponent(this, model).getToolbar();
         this.piano = new PianoRoll();
         this.playlist = new PlaylistComponent();
         this.browser = new Browser(this).getBrowser();
@@ -51,6 +53,7 @@ public class AppView extends VBox {
 
     // Method to switch to Overview view
     public void switchToOverview() {
+<<<<<<< HEAD
         // Export current track pattern to midi
         try {
             String name = this.model.getSelectedTrack();
@@ -60,12 +63,16 @@ public class AppView extends VBox {
             e.printStackTrace();
             System.out.println("ayo?");
         }
+=======
+        this.model.setCurrentView(View.OVERVIEW);
+>>>>>>> 2beb361 (feat: play/pause/stop button for compostioin view)
         this.getChildren().removeAll(this.playlist, this.pianoView);
         this.getChildren().addAll(this.playlist);
     }
 
     // Method to switch to Composition View view
     public void switchToCompositionView() {
+<<<<<<< HEAD
         File f = new File(exportFilePath + this.model.getSelectedTrack() + ".mid");
         this.pianoView.getChildren().remove(this.piano);
         if(f.exists() && !f.isDirectory()) { 
@@ -90,6 +97,9 @@ public class AppView extends VBox {
             this.piano = new PianoRoll();
         }
         this.pianoView.getChildren().add(this.piano);
+=======
+        this.model.setCurrentView(View.COMPOSITION);
+>>>>>>> 2beb361 (feat: play/pause/stop button for compostioin view)
         this.getChildren().removeAll(this.pianoView, this.playlist);
         this.getChildren().addAll(this.pianoView);
     }

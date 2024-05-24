@@ -3,7 +3,9 @@ package poolongprojectn7.toolbarcomponent;
 import javafx.geometry.Pos;            // Import tools to align elements of a layout
 import javafx.scene.control.*;         // Import JavaFX's user interface components.
 import javafx.scene.layout.HBox;       // Import JavaFX's horizontal layout.
+import poolongprojectn7.AppModel;
 import poolongprojectn7.AppView;
+import poolongprojectn7.AppModel.View;
 import javafx.event.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,11 +14,13 @@ import javafx.scene.image.ImageView;
 public class ToolBarComponent extends ToolBar {
     private ToolBar toolbar;            // Attribute of ToolBar type wich is the tool bar of the application
     private AppView view;
+    private AppModel appModel;
     
     @SuppressWarnings("unchecked")
-    public ToolBarComponent(AppView view) {                 // Creation of the tool bar
+    public ToolBarComponent(AppView view, AppModel appModel) {                 // Creation of the tool bar
         this.toolbar = new ToolBar();                       // Initialisation
         this.view = view;
+        this.appModel = appModel;
 
         // Menu Files with its options
         MenuButton menuFiles = new MenuButton("Files");            // Drop-down menu named "Files"
@@ -42,8 +46,11 @@ public class ToolBarComponent extends ToolBar {
 
         // Buttons to control the playing of the music
         Button play = createButtonWithImage("Play.png", "Start");
+        play.setOnAction(handlerPlayButton);
         Button pause = createButtonWithImage("Pause.png", "Pause");
+        play.setOnAction(handlerPauseButton);
         Button stop = createButtonWithImage("Stop.png", "Stop");
+        play.setOnAction(handlerStopButton);
 
         // Slider for the BPM
         Slider bpmSlider = new Slider(50, 250, 120);  // Initialisation of the slider with the bounds and the default value 120
@@ -89,14 +96,42 @@ public class ToolBarComponent extends ToolBar {
     }
 
     // Method to handle actions from the Overview button
-    EventHandler<ActionEvent> handlerOverview = event -> {
+    private EventHandler<ActionEvent> handlerOverview = event -> {
         this.view.switchToOverview();
     };
 
     // Method to handle actions from the Composition View button
-    EventHandler<ActionEvent> handlerCompositionView = event -> {
+    private EventHandler<ActionEvent> handlerCompositionView = event -> {
         this.view.switchToCompositionView();
     };
+
+    /** Handler for play button. */
+    private EventHandler<ActionEvent> handlerPlayButton = event -> {
+        if (appModel.getCurrentView() == View.COMPOSITION) {
+
+        } else {
+
+        }
+    };
+
+    /** Handler for pause button. */
+    private EventHandler<ActionEvent> handlerPauseButton = event -> {
+        if (appModel.getCurrentView() == View.COMPOSITION) {
+
+        } else {
+            
+        }
+    };
+
+    /** Handler for stop button. */
+    private EventHandler<ActionEvent> handlerStopButton = event -> {
+        if (appModel.getCurrentView() == View.COMPOSITION) {
+
+        } else {
+            
+        }
+    };
+
 
     // Method to create an ImageView from the name of an image file
     private ImageView createImageView(String imageName) {
