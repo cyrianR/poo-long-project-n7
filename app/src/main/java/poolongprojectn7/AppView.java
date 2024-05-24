@@ -27,7 +27,6 @@ public class AppView extends VBox {
     private PlaylistComponent playlist;
     private TreeView<String> browser;
     private HBox pianoView;
-    private AppModel model;
 
     /** Constructor view part of the MVC of the application. */
     public AppView(AppModel model, Runnable handler) {
