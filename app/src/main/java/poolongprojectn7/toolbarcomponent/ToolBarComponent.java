@@ -12,7 +12,8 @@ import javafx.scene.image.ImageView;
 public class ToolBarComponent extends ToolBar {
     private ToolBar toolbar;            // Attribute of ToolBar type wich is the tool bar of the application
     private AppView view;
- 
+    
+    @SuppressWarnings("unchecked")
     public ToolBarComponent(AppView view) {                 // Creation of the tool bar
         this.toolbar = new ToolBar();                       // Initialisation
         this.view = view;
@@ -27,6 +28,17 @@ public class ToolBarComponent extends ToolBar {
             new MenuItem("Save project"),
             new MenuItem("Export project")
         );
+
+        // Track Selecter
+        ChoiceBox trackSelecter = new ChoiceBox<String>();            // Drop-down menu named "Tracks"
+        for (int i = 1; i <= 10; i++) {                               // Adding all 10 tracks to the menu
+            trackSelecter.getItems().add("Track ".concat(Integer.toString(i)));
+        }
+        // Update selected track on selection
+        trackSelecter.setOnAction(e -> {
+            int trackSelected = Integer.parseInt(((String) trackSelecter.getValue()).split(" ")[1]);
+            this.view.getModel().setCurrentPattern(trackSelected);
+        });
 
         // Buttons to control the playing of the music
         Button play = createButtonWithImage("Play.png", "Start");
@@ -73,8 +85,7 @@ public class ToolBarComponent extends ToolBar {
 
 
         // Adding all the controls to the tool bar
-        toolbar.getItems().addAll(menuFiles, play, pause, stop, bpmControl, timerBox, metronomeToggle, overviewButton, compositionButton);
-    
+        toolbar.getItems().addAll(menuFiles, trackSelecter, play, pause, stop, bpmControl, timerBox, metronomeToggle, overviewButton, compositionButton);
     }
 
     // Method to handle actions from the Overview button
