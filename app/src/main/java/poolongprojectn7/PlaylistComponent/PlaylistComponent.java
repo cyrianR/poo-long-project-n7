@@ -9,8 +9,8 @@ import javafx.scene.text.Text;
 
 public class PlaylistComponent extends ScrollPane {
 
-    private final int NB_TRACKS = 10;                           // Number of tracks in the playlist
-    private ArrayList<Track> tracks = new ArrayList<Track>();   // List of the tracks of the playlist
+    private final int NB_TRACKS = 10; // Number of tracks in the playlist
+    private ArrayList<Track> tracks = new ArrayList<Track>(); // List of the tracks of the playlist
 
     public PlaylistComponent() {
         super();
@@ -25,9 +25,8 @@ public class PlaylistComponent extends ScrollPane {
         content.getChildren().add(new Text("Playlist"));
         tracks.forEach(content.getChildren()::add);
         content.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        content.setPadding(new Insets(5,5,5,5));
+        content.setPadding(new Insets(5, 5, 5, 5));
 
-        this.setContent(content); 
+        this.setContent(content);
     }
-    
 }
