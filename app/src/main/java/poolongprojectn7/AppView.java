@@ -11,6 +11,9 @@ import javafx.scene.control.TreeView;
 
 public class AppView extends VBox {
 
+    /* The file path where the temporary MIDI file will be stored */
+    private static String exportFilePath = System.getProperty("user.dir") + "/src/exports/tracks";
+
     private AppModel model;
     private ToolBar toolBar;
     private PianoRoll piano;
@@ -45,6 +48,7 @@ public class AppView extends VBox {
 
     // Method to switch to Composition View view
     public void switchToCompositionView() {
+        // this.piano.
         this.getChildren().removeAll(this.pianoView, this.playlist);
         // this.getChildren().removeAll(this.piano, this.playlist, this.browser);
         this.getChildren().addAll(this.pianoView);
