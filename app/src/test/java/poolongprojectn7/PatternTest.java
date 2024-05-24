@@ -193,10 +193,12 @@ class PatternTest {
         pattern.addNote(note1, note1TickStart);
         pattern.addNote(note2, note2TickStart);
 
-        pattern.removeNote(note1, note1TickStart);
+        /* Remove note 1 */
+        pattern.removeNote(12 * 3 + 7, note1TickStart);
+        //pattern.removeNote(note1, note1TickStart);
         Sequence sequence = pattern.getSequence();
 
-        // Same track because the notes have the same height
+        /* Same track as the notes have the same height */
         Track track = sequence.getTracks()[pattern.getChannel()];
 
         boolean CorrectEventsFound = true;
@@ -225,10 +227,10 @@ class PatternTest {
 
         assertEquals(5020, pattern.getPatternLength());
 
-        pattern.removeNote(note1, note1TickStart);
+        pattern.removeNote(3 * 12 + 7, note1TickStart);
         assertEquals(510, pattern.getPatternLength());
     
-        pattern.removeNote(note2, note2TickStart);
+        pattern.removeNote(3 * 12 + 7, note2TickStart);
         assertEquals(0, pattern.getPatternLength());
     }
 
@@ -242,7 +244,7 @@ class PatternTest {
         pattern.addNote(note1, note1TickStart);
         pattern.addNote(note2, note2TickStart);
 
-        pattern.removeNote(note1, 600);
+        pattern.removeNote(3 * 12 + 7, 600);
 
         Sequence sequence = pattern.getSequence();
 

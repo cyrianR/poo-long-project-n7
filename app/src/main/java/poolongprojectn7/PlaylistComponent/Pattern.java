@@ -1,9 +1,12 @@
 package poolongprojectn7.PlaylistComponent;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pattern {
+public class Pattern implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private String name;
     private List<Note> notes;
 

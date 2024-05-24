@@ -13,7 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+
 
 public class Track extends VBox {
     private final int SPACING = 5; // Spacing between the elements
@@ -102,12 +102,6 @@ public class Track extends VBox {
         cell.setStyle("-fx-background-color: grey;");
         cell.setUserData(pattern);
         setupPatternContextMenu(cell);
-    }
-
-    // Method to open the piano roll for a pattern
-    private void openPianoRoll(Pane cell) {
-        // Code to switch to composition view and open the piano roll
-        System.out.println("Open Piano Roll for: " + cell.getUserData());
     }
 
     // Method to setup context menu for a pattern

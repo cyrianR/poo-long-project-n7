@@ -1,6 +1,10 @@
 package poolongprojectn7.PlaylistComponent;
 
-public class Note {
+import java.io.Serializable;
+
+public class Note implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private int row;
     private int column;
 

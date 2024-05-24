@@ -3,19 +3,16 @@ package poolongprojectn7.toolbarcomponent;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import poolongprojectn7.AppController;
 
 public class ToolBarComponent extends ToolBar {
     private ToolBar toolbar; // Attribute of ToolBar type which is the tool bar of the application
-    private AppController appController;
 
     public ToolBarComponent(AppController appController) { // Creation of the tool bar
         this.toolbar = new ToolBar(); // Initialisation
-        this.appController = appController;
+
 
         // Menu Files with its options
         MenuButton menuFiles = new MenuButton("Files"); // Drop-down menu named "Files"
