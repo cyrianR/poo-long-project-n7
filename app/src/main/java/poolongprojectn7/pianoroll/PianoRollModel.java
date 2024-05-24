@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.sound.midi.InvalidMidiDataException;
 
+import poolongprojectn7.InvalidNoteException;
 import poolongprojectn7.Note;
 import poolongprojectn7.Pattern;
 
@@ -101,7 +102,11 @@ public class PianoRollModel {
             this.pattern.removeNote(this.getMidiNoteNumberFromRow(i), j * NOTE_TICK_LENGTH);
         } else {
             Note note = new Note(this.currentOctave, i % (MAX_NOTE_INDEX + 1), VELOCITY, NOTE_TICK_LENGTH);
-            this.pattern.addNote(note, j * NOTE_TICK_LENGTH);
+            try {
+                this.pattern.addNote(note, j * NOTE_TICK_LENGTH);
+            } catch (InvalidNoteException e) {
+                e.printStackTrace();
+            }
         }
         this.activeNotes[i][j] = !this.activeNotes[i][j];
     }
