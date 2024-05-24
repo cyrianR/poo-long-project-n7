@@ -10,12 +10,15 @@ import java.io.File;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeView;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import javax.sound.midi.InvalidMidiDataException;
 
 public class AppView extends VBox {
 
     /* The file path where the temporary MIDI file will be stored */
-    private static String exportFilePath = System.getProperty("user.dir") + "/src/exports/tracks";
+    private static String exportFilePath = System.getProperty("user.dir") + "/src/exports/tracks/";
 
     private AppModel model;
     private ToolBar toolBar;
@@ -36,6 +39,10 @@ public class AppView extends VBox {
         this.pianoView = new HBox(this.browser, this.piano);
 
         this.getChildren().addAll(this.toolBar, this.playlist);
+
+        if (!Files.exists(Paths.get(exportFilePath))) {
+            new File(exportFilePath).mkdirs();
+        }
     }
 
     public AppModel getModel() {
@@ -45,34 +52,33 @@ public class AppView extends VBox {
     // Method to switch to Overview view
     public void switchToOverview() {
         // Export current track pattern to midi
-        System.out.println("yes");
-        String[] nameSplit = this.model.getSelectedTrack().split(" ");
-        // String name = nameSplit[0] + "_" + nameSplit[1];
-        String name = nameSplit[0] + " " + nameSplit[1];
-        System.out.println(name);
-        // (this.piano.getModel().getPattern()).export(exportFilePath, name); // export pète ???
-        System.out.println("yes2");
+        try {
+            String name = this.model.getSelectedTrack();
+            System.out.println(name);
+            this.piano.getModel().getPattern().save(exportFilePath, name);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("ayo?");
+        }
         this.getChildren().removeAll(this.playlist, this.pianoView);
         this.getChildren().addAll(this.playlist);
     }
 
     // Method to switch to Composition View view
     public void switchToCompositionView() {
-        File f = new File(exportFilePath + "/" + this.model.getSelectedTrack() + ".mid");
-        System.out.println(f.exists());
+        File f = new File(exportFilePath + this.model.getSelectedTrack() + ".mid");
         this.pianoView.getChildren().remove(this.piano);
         if(f.exists() && !f.isDirectory()) { 
             // Import current track pattern
-            System.out.println(f.toString());
+            // System.out.println(f.toString());
             try {
                 this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
             }
             // catch (InvalidMidiDataException | IOException e ) {
-            //     System.out.println("err");
             //     this.piano = new PianoRoll();
             // }
             catch (InvalidMidiDataException e ) {
-                System.out.println("Midi exc");
+                System.out.println("midi");
                 this.piano = new PianoRoll();
             }
             catch (IOException e ) {
