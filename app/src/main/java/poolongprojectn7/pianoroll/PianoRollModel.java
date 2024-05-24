@@ -15,7 +15,7 @@ import poolongprojectn7.Pattern;
  */
 public class PianoRollModel {
 
-    /* Fixed ntoes velocity. */
+    /* Fixed notes velocity. */
     final int VELOCITY = 100;
     /* Maximum octave for a note. */
     final int MAX_OCTAVE = 10;
@@ -133,5 +133,13 @@ public class PianoRollModel {
         if (i <= MAX_OCTAVE && i >= 0) {
             this.currentOctave = i;
         }
+    }
+
+    /**
+     * Obtains the piano roll pattern.
+     * @return piano roll pattern
+     */
+    public Pattern getPattern() {
+        return this.pattern;
     }
 }
