@@ -14,7 +14,7 @@ import javax.sound.midi.*;
 class MelodyTest {
 
     /* The file path where the temporary MIDI file will be stored */
-    private static String filePath = System.getProperty("user.dir") + "/src/test/testMidi";
+    private static String filePath = System.getProperty("user.dir") + "/src/test/testMidi/";
 
     @BeforeAll
     static void setUp() {
@@ -149,6 +149,7 @@ class MelodyTest {
             createAndSaveMidi(pattern);
 
             /* Play a sequence saved in the past */
+            System.out.println(filePath);
             pattern = new Pattern(filePath, "test");
             pattern.export(filePath, "test_wav");
             playSequence(pattern);
