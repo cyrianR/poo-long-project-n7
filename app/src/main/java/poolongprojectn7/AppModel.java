@@ -7,7 +7,7 @@ public class AppModel {
 
     public AppModel() {
         for (int i = 0; i < 10; i++) {
-            trackSaves[i] = "Track ".concat(Integer.toString(i));
+            trackSaves[i] = "Track ".concat(Integer.toString(i + 1));
             this.selectedTrack = trackSaves[0]; // Default track is "Track 1"
         }
     }
