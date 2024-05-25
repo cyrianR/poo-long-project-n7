@@ -55,7 +55,6 @@ public class AppView extends VBox {
         // Export current track pattern to midi
         try {
             String name = this.model.getSelectedTrack();
-            System.out.println(name);
             this.piano.getModel().getPattern().save(exportFilePath, name);
         } catch (IOException e) {
             e.printStackTrace();
