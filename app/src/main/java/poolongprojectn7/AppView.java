@@ -69,14 +69,10 @@ public class AppView extends VBox {
         File f = new File(exportFilePath + this.model.getSelectedTrack() + ".mid");
         this.pianoView.getChildren().remove(this.piano);
         if(f.exists() && !f.isDirectory()) { 
-            // Import current track pattern
-            // System.out.println(f.toString());
+
             try {
                 this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
             }
-            // catch (InvalidMidiDataException | IOException e ) {
-            //     this.piano = new PianoRoll();
-            // }
             catch (InvalidMidiDataException e ) {
                 System.out.println("midi");
                 this.piano = new PianoRoll();
