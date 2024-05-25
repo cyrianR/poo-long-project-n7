@@ -52,7 +52,6 @@ public class AppView extends VBox {
 
     // Method to switch to Overview view
     public void switchToOverview() {
-<<<<<<< HEAD
         // Export current track pattern to midi
         try {
             String name = this.model.getSelectedTrack();
@@ -62,16 +61,12 @@ public class AppView extends VBox {
             e.printStackTrace();
             System.out.println("ayo?");
         }
-=======
-        this.model.setCurrentView(View.OVERVIEW);
->>>>>>> 2beb361 (feat: play/pause/stop button for compostioin view)
         this.getChildren().removeAll(this.playlist, this.pianoView);
         this.getChildren().addAll(this.playlist);
     }
 
     // Method to switch to Composition View view
     public void switchToCompositionView() {
-<<<<<<< HEAD
         File f = new File(exportFilePath + this.model.getSelectedTrack() + ".mid");
         this.pianoView.getChildren().remove(this.piano);
         if(f.exists() && !f.isDirectory()) { 
@@ -96,9 +91,6 @@ public class AppView extends VBox {
             this.piano = new PianoRoll();
         }
         this.pianoView.getChildren().add(this.piano);
-=======
-        this.model.setCurrentView(View.COMPOSITION);
->>>>>>> 2beb361 (feat: play/pause/stop button for compostioin view)
         this.getChildren().removeAll(this.pianoView, this.playlist);
         this.getChildren().addAll(this.pianoView);
     }

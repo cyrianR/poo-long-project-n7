@@ -1,6 +1,5 @@
 package poolongprojectn7.pianoroll;
 
-<<<<<<< HEAD
 import javafx.geometry.*;
 
 import javafx.scene.*;
@@ -127,8 +126,4 @@ public class PianoRollController extends Pane{
         model.changeNoteState(r, c);
         view.update(r,c);
     };
-=======
-public class PianoRollController {
-    
->>>>>>> 00ccf4e (refactor(pianoroll): start refactor)
 }

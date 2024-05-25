@@ -2,11 +2,15 @@ package poolongprojectn7;
 
 public class AppModel {
 
-<<<<<<< HEAD
+    public enum View { OVERVIEW, COMPOSITION};
+
+    private View currentView;
+
     private String selectedTrack;
     private String[] trackSaves = new String[10];
 
     public AppModel() {
+        this.currentView = View.OVERVIEW;
         for (int i = 0; i < 10; i++) {
             trackSaves[i] = "Track ".concat(Integer.toString(i + 1));
             this.selectedTrack = trackSaves[0]; // Default track is "Track 1"
@@ -23,15 +27,6 @@ public class AppModel {
         return this.selectedTrack;
     }
 
-=======
-    public enum View { OVERVIEW, COMPOSITION};
-
-    private View currentView;
-
-    public AppModel() {
-        this.currentView = View.OVERVIEW;
-    }
-
     public void setCurrentView(View view) {
         this.currentView = view;
     }
@@ -39,5 +34,4 @@ public class AppModel {
     public View getCurrentView() {
         return this.currentView;
     }
->>>>>>> 2beb361 (feat: play/pause/stop button for compostioin view)
 }
