@@ -15,7 +15,11 @@ public class ToolBarComponent extends ToolBar {
     private ToolBar toolbar;            // Attribute of ToolBar type wich is the tool bar of the application
     private AppView view;
     private AppModel appModel;
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 33be39947aeb73457a3e56fffac994f9c1cec1e6
     @SuppressWarnings("unchecked")
     public ToolBarComponent(AppView view, AppModel appModel) {                 // Creation of the tool bar
         this.toolbar = new ToolBar();                       // Initialisation

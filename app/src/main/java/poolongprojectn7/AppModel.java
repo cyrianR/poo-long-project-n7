@@ -1,6 +1,7 @@
 package poolongprojectn7;
 
 public class AppModel {
+    public enum View { OVERVIEW, COMPOSITION};
 
     public enum View { OVERVIEW, COMPOSITION};
 
@@ -8,6 +9,7 @@ public class AppModel {
 
     private String selectedTrack;
     private String[] trackSaves = new String[10];
+    private View currentView;
 
     public AppModel() {
         this.currentView = View.OVERVIEW;
