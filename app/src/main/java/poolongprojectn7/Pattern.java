@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.sound.midi.*;
 import java.io.File;
@@ -160,7 +161,7 @@ public class Pattern {
      * @param note the note to be removed
      * @param startTick the starting tick of the note
      */
-    public void removeNote(Note note, long startTick) {
+    private void removeNote(Note note, long startTick) {
         /* Remove the note to the note map */
         removeNoteToMap(note, startTick);
         
@@ -197,6 +198,34 @@ public class Pattern {
         }
         updatePatternLength();
     }
+
+    /**
+     * Remove a specific note from the pattern.
+     * @param midiNoteNumber the midi note number of the note to be removed
+     * @param startTick the starting tick of the note
+     */
+    public void removeNote(int midiNoteNumber, long startTick) {
+        List<Note> notes = noteMap.get(startTick);
+        if (notes != null) {
+            /* Create an iterator to avoid ConcurrentModificationException
+             by modifying the notes list */
+            Iterator<Note> iterator = notes.iterator();
+            while (iterator.hasNext()) {
+                Note note = iterator.next();
+                /* Remove the note from the iterator and the note itself */ 
+                if (note.getMidiNoteNumber() == midiNoteNumber) {
+                    iterator.remove();
+                    removeNote(note, startTick);
+                }
+            }
+            /* Remove the startTick entry if there are no notes anymore at that time */
+            if (notes.isEmpty()) {
+                this.noteMap.remove(startTick);
+            }
+        }
+    }
+    
+    
 
     /**
      * Update the pattern length attribut.

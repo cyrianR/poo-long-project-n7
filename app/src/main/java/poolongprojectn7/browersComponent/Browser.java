@@ -32,17 +32,11 @@ public class Browser extends TreeView<String> {
 
         // Branches (instrument families)
         TreeItem<String> bank_0 = new TreeItem<>("Pianos");
-        TreeItem<String> test = new TreeItem<>("Strings");
-
-        // Leaves (instruments)
-        TreeItem<String> guitar = new TreeItem<>("Guitar");
-        TreeItem<String> violin = new TreeItem<>("Violin");
 
         // Tree contruction
-        root.getChildren().addAll(bank_0, test);
+        root.getChildren().addAll(bank_0);
         // pianos.getChildren().addAll(piano, bPiano);
         HashMap<String, Integer> instruMap = createDefaultLeafNodes(bank_0);
-        test.getChildren().addAll(guitar, violin);
         
         browser.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             String selectedItem = newValue.getValue();
