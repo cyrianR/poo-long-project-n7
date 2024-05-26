@@ -20,7 +20,7 @@ import javafx.scene.input.MouseEvent;
 
 
 public class ToolBarComponent extends ToolBar {
-    private static final String SOUND_METRONOM_NAME = "metronom.wav";
+    private static final String SOUND_METRONOM_NAME = "metronome.wav";
     private ToolBar toolbar;            // Attribute of ToolBar type wich is the tool bar of the application
     private AppView view;
     private int bpm;
