@@ -1,39 +1,52 @@
 package poolongprojectn7.browersComponent;
 
 import poolongprojectn7.AppView;
+import java.util.HashMap;
+
+import javax.sound.midi.Instrument;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+
+import poolongprojectn7.Pattern;
+
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 public class Browser extends TreeView<String> {
 
+    private Pattern pattern;
     private TreeView<String> browser;
     private AppView view;
+    // liste de filtre des clicks
+    private HashMap<String, Integer> instrumentHashMap = new HashMap<String, Integer>();
+
 
     @SuppressWarnings("unchecked")
-    public Browser(AppView view) {
+    public Browser(AppView view, Pattern pattern) {
         this.view = view;
+        this.pattern = pattern;
         // Creation of the tree
         TreeItem<String> root = new TreeItem<>("root");
         this.browser = new TreeView<>(root);
         this.browser.setShowRoot(true);
 
         // Branches (instrument families)
-        TreeItem<String> percussions = new TreeItem<>("Percussions");
-        TreeItem<String> strings = new TreeItem<>("Strings");
-
-        // Leaves (instruments)
-        TreeItem<String> guitar = new TreeItem<>("Guitar");
-        TreeItem<String> violin = new TreeItem<>("Violin");
-        TreeItem<String> drum = new TreeItem<>("Drum");
+        TreeItem<String> bank_0 = new TreeItem<>("Pianos");
 
         // Tree contruction
-        root.getChildren().addAll(percussions, strings);
-        percussions.getChildren().addAll(drum);
-        strings.getChildren().addAll(guitar, violin);
-
+        root.getChildren().addAll(bank_0);
+        // pianos.getChildren().addAll(piano, bPiano);
+        HashMap<String, Integer> instruMap = createDefaultLeafNodes(bank_0);
+        
         browser.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             String selectedItem = newValue.getValue();
-            System.out.println(selectedItem);
+            if (this.instrumentHashMap.containsKey(selectedItem)) {
+                try {
+                    this.pattern.setInstrument(this.instrumentHashMap.get(selectedItem));
+                } catch (InvalidMidiDataException e) {
+                    e.printStackTrace();
+                }
+            }
         });
 
     }
@@ -41,5 +54,26 @@ public class Browser extends TreeView<String> {
     public TreeView<String> getBrowser() {
         return this.browser;
     }
-   
+
+    /**
+	 * Initializes default instruments in browser.
+	 */
+	@SuppressWarnings("unchecked")
+    private HashMap<String, Integer> createDefaultLeafNodes(TreeItem parent) {
+        try {
+            // TODO : a modif (instruments de base)
+            Instrument[] instrumentsList = MidiSystem.getSynthesizer().getAvailableInstruments();
+            int ind = 0;
+            // TODO : FIN
+            for (Instrument instrument : instrumentsList) {
+                String name = instrument.getName();
+                this.instrumentHashMap.put(name, ind);
+                parent.getChildren().addAll(new TreeItem<>(name));
+                ind++;
+            }
+        }
+        catch (Exception e) {
+        }
+        return instrumentHashMap;
+    }
 }
