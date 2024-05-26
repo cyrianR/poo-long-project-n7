@@ -4,14 +4,30 @@ import javafx.geometry.Pos;            // Import tools to align elements of a la
 import javafx.scene.control.*;         // Import JavaFX's user interface components.
 import javafx.scene.layout.HBox;       // Import JavaFX's horizontal layout.
 import poolongprojectn7.AppView;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import javafx.event.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 
 public class ToolBarComponent extends ToolBar {
     private ToolBar toolbar;            // Attribute of ToolBar type wich is the tool bar of the application
     private AppView view;
+    private int bpm;
+    private SourceDataLine metronomSound = null;
     
     @SuppressWarnings("unchecked")
     public ToolBarComponent(AppView view) {                 // Creation of the tool bar
@@ -52,6 +68,9 @@ public class ToolBarComponent extends ToolBar {
         bpmSlider.setMajorTickUnit(50);          // Definition of the main step of thr slider = 50
         bpmSlider.setMinorTickCount(4);          // Definition of the secondary step of thr slider = 4
         bpmSlider.setSnapToTicks(true);          // Postionning the cursor on the nearest graduation of the slider
+        bpmSlider.setOnMouseReleased(handlerSlider);    // Binding the slider with the function that manages the changes on it
+        playMetronom("metronom.wav");
+        this.bpm = (int) bpmSlider.getValue();          // Setting the initial value of the BPM
         Label bpmLabel = new Label("BPM:");       // Naming the slider "BPM"
         HBox bpmControl = new HBox(bpmLabel, bpmSlider);   // Binding the name to the slider in an horizontal layout
         bpmControl.setAlignment(Pos.CENTER_LEFT);         // Ajust je alignment of the name with the slider
@@ -93,6 +112,12 @@ public class ToolBarComponent extends ToolBar {
         this.view.switchToOverview();
     };
 
+    // Method to handle actions from the slider
+    EventHandler<MouseEvent> handlerSlider = event -> {
+        Slider slider = (Slider) event.getSource();
+        this.bpm = (int) slider.getValue();
+    };
+
     // Method to handle actions from the Composition View button
     EventHandler<ActionEvent> handlerCompositionView = event -> {
         this.view.switchToCompositionView();
@@ -121,6 +146,31 @@ public class ToolBarComponent extends ToolBar {
         toggleButton.setGraphic(createImageView(imageName));    // Binding the icon to the toggle button.
         toggleButton.setTooltip(new Tooltip(tooltipText));      // Binding the tooltip to the toggle button.
         return toggleButton;
+    }
+
+    public void playMetronom(String soundName) {
+        //if (this.metronomSound == null){
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("/sounds/" + soundName);
+            if (inputStream == null) {
+                System.out.println("marche pas");
+            }
+            /*try {
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(inputStream);
+                AudioFormat audioFormat = audioStream.getFormat();
+                DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);
+                SourceDataLine sourceDataLine = (SourceDataLine) AudioSystem.getLine(info);
+                sourceDataLine.open(audioFormat);
+                this.metronomSound = sourceDataLine;
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+        this.metronomSound.start();*/
+
     }
 
     public ToolBar getToolbar() {
