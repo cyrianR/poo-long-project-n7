@@ -3,7 +3,6 @@ package poolongprojectn7;
 /**
  * Represents a note that can be added to a Pattern.
  * This is a part of the piano roll model.
- * @author Ragot Cyrian
  * @version Alpha
  */
 public class Note {
@@ -118,6 +117,14 @@ public class Note {
      */
     public void setDurationTicks(long durationTicks) {
         this.durationTicks = durationTicks;
+    }
+
+    /*
+     * Get the note as follows: (octave, index, velocity, duration).
+     */
+    public String toString() {
+        return "(" + this.octave + ", " + this.noteIndex
+        + ", " + this.velocity + ", " + this.durationTicks + ")";
     }
 
 }
