@@ -2,6 +2,7 @@ package poolongprojectn7;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -14,6 +15,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         // NB : Stage = Window
         primaryStage.setTitle("N7 STUDIO");
+        primaryStage.getIcons().add(new Image("/icons/logo.png"));
         primaryStage.setMaximized(true);
         primaryStage.setOnCloseRequest(event -> {
             event.consume();
