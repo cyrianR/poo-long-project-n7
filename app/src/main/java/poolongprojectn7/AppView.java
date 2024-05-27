@@ -33,9 +33,10 @@ public class AppView extends VBox {
 
         // Creating toolbar
         this.toolBar = new ToolBarComponent(this).getToolbar();
+        Pattern pattern = new Pattern();
+        this.browser = new Browser(this, pattern).getBrowser();
         this.piano = new PianoRoll();
         this.playlist = new PlaylistComponent();
-        this.browser = new Browser(this).getBrowser();
         this.pianoView = new HBox(this.browser, this.piano);
 
         this.getChildren().addAll(this.toolBar, this.playlist);
@@ -54,11 +55,9 @@ public class AppView extends VBox {
         // Export current track pattern to midi
         try {
             String name = this.model.getSelectedTrack();
-            System.out.println(name);
             this.piano.getModel().getPattern().save(exportFilePath, name);
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("ayo?");
         }
         this.getChildren().removeAll(this.playlist, this.pianoView);
         this.getChildren().addAll(this.playlist);
@@ -70,19 +69,10 @@ public class AppView extends VBox {
         this.pianoView.getChildren().remove(this.piano);
         if(f.exists() && !f.isDirectory()) { 
             // Import current track pattern
-            // System.out.println(f.toString());
             try {
                 this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
             }
-            // catch (InvalidMidiDataException | IOException e ) {
-            //     this.piano = new PianoRoll();
-            // }
-            catch (InvalidMidiDataException e ) {
-                System.out.println("midi");
-                this.piano = new PianoRoll();
-            }
-            catch (IOException e ) {
-                System.out.println("IO");
+            catch (InvalidMidiDataException | IOException e ) {
                 this.piano = new PianoRoll();
             }
         }
