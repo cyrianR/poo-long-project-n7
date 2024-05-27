@@ -6,6 +6,7 @@ import poolongprojectn7.PlaylistComponent.PlaylistComponent;
 import poolongprojectn7.browersComponent.Browser;
 import poolongprojectn7.pianoroll.PianoRoll;
 import poolongprojectn7.toolbarcomponent.ToolBarComponent;
+import poolongprojectn7.MixerComponent.MixerComponent;
 import java.io.File;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeView;
@@ -26,7 +27,7 @@ public class AppView extends VBox {
     private PlaylistComponent playlist;
     private TreeView<String> browser;
     private HBox pianoView;
-
+    private MixerComponent mixer; 
     /** Constructor view part of the MVC of the application. */
     public AppView(AppModel model, Runnable handler) {
         this.model = model;
@@ -38,8 +39,9 @@ public class AppView extends VBox {
         this.piano = new PianoRoll();
         this.playlist = new PlaylistComponent();
         this.pianoView = new HBox(this.browser, this.piano);
+        this.mixer = new MixerComponent(); 
 
-        this.getChildren().addAll(this.toolBar, this.playlist);
+        this.getChildren().addAll(this.toolBar, this.playlist, this.mixer);
 
         if (!Files.exists(Paths.get(exportFilePath))) {
             new File(exportFilePath).mkdirs();
@@ -59,8 +61,8 @@ public class AppView extends VBox {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.getChildren().removeAll(this.playlist, this.pianoView);
-        this.getChildren().addAll(this.playlist);
+        this.getChildren().removeAll(this.playlist, this.pianoView, this.mixer);
+        this.getChildren().addAll(this.playlist, this.mixer);
     }
 
     // Method to switch to Composition View view
@@ -80,7 +82,7 @@ public class AppView extends VBox {
             this.piano = new PianoRoll();
         }
         this.pianoView.getChildren().add(this.piano);
-        this.getChildren().removeAll(this.pianoView, this.playlist);
+        this.getChildren().removeAll(this.pianoView, this.playlist, this.mixer);
         this.getChildren().addAll(this.pianoView);
     }
 }
