@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import javax.swing.JOptionPane;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +39,7 @@ class MelodyTest {
      * Write and save a melody in a given pattern.
      * @param pattern the pattern to modify
      */
-    public void createAndSaveMidi(Pattern pattern) {
+    public void createMelody(Pattern pattern) {
         Note reb_trans = new Note(7, 1, 100, 500);
         Note si_trans = new Note(6, 11, 100, 500);
         Note lab_trans = new Note(6, 8, 100, 500);
@@ -112,12 +113,8 @@ class MelodyTest {
             pattern.addNote(si0, 3650);
             pattern.addNote(si0, 3800);
             pattern.addNote(la0, 3950);   
-            
-            
-            /* Save the pattern */
-            pattern.save(filePath, "test");
 
-        } catch (InvalidNoteException | IOException e) {
+        } catch (InvalidNoteException e) {
             e.printStackTrace();
         }
     }
@@ -141,19 +138,67 @@ class MelodyTest {
         }
     }
 
+
+    /**
+     * Write and save a melody in a given pattern.
+     * @param pattern the pattern to modify
+     */
+    public void createKicks(Pattern pattern) {
+        Note kick = new Note(4, 5, 100, 500);
+
+        try {
+            pattern.addNote(kick, 0);
+            for (int i = 0; i < 3800; i = i + 300) {
+                pattern.addNote(kick, 200 + i);
+            }
+        } catch (InvalidNoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     public void testReadAndWrite() throws InvalidMidiDataException, IOException {
             /* Create and play a new sequence */
-            Pattern pattern = new Pattern();
-            pattern.setInstrument(34);
-            createAndSaveMidi(pattern);
-
+            Pattern melody = new Pattern();
+            melody.setInstrument(34);
+            createMelody(melody);
+            /* Save the pattern */
+            melody.save(filePath, "test");
+            
             /* Play a sequence saved in the past */
-            pattern = new Pattern(filePath, "test");
-            pattern.export(filePath, "test_wav");
-            playSequence(pattern);
-
+            Pattern testReadMelody = new Pattern(filePath, "test");
+            playSequence(testReadMelody);
             assertTrue(true);
+    }
+
+    @Test
+    public void testPlaylist() throws InvalidMidiDataException, IOException {
+        /* Create the melody */
+        Pattern melody = new Pattern();
+        melody.setInstrument(34);
+        createMelody(melody);
+        melody.save(filePath, "melody"); // The save is mandatory to export
+        melody.export(filePath, "melody_wav");
+        
+        /* Create the kicks */
+        Pattern kicks = new Pattern();
+        kicks.setInstrument(113);
+        createKicks(kicks);
+        kicks.save(filePath, "kicks");
+        kicks.export(filePath, "kicks_wav");
+
+        /* Test the playlist */
+        Playlist playlist = new Playlist();
+        SoundEntry musique = new SoundEntry(filePath + "melody_wav.wav");
+        SoundEntry soundToAdd = new SoundEntry(filePath + "kicks_wav.wav");
+        playlist.addSound(musique, 0);
+        playlist.addSound(soundToAdd, 0);
+        
+        playlist.playAll();
+        assertTrue(true);
+
+        /* Unmute this to test */
+        //JOptionPane.showMessageDialog(null, "Clic to stop playing");
     }
 
 }
