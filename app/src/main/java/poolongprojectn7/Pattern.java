@@ -45,6 +45,7 @@ public class Pattern {
     private Map<Long, List<Note>> noteMap;
     /* Sequencer used to play the sequence. */
     private Sequencer sequencer = null;
+    private long positionTick  = 0;
 
     /**
      * Create a new pattern.
@@ -55,10 +56,10 @@ public class Pattern {
         this.instrument = 0;
         this.noteMap = new HashMap<>();
         try {
-            System.out.println("OK ???");
             this.sequence = initSequence();
             this.sequencer = MidiSystem.getSequencer();
             this.sequencer.open();
+            this.sequencer.setSequence(this.sequence);
             /* If the specified sequence's divisionType is not valid */
         } catch (InvalidMidiDataException | MidiUnavailableException e) {
             e.printStackTrace();
@@ -88,6 +89,7 @@ public class Pattern {
         try {
             this.sequencer = MidiSystem.getSequencer();
             this.sequencer.open();
+            this.sequencer.setSequence(this.sequence);
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
         }
@@ -440,33 +442,35 @@ public class Pattern {
         sequencer.close();
     }
 
+    /** Play the notes in the pattern from position zero. */
     public void play() {
+        System.out.println("here 1");
         if (sequencer.isRunning()) {
             sequencer.stop();
+            System.out.println("here 2");
         }
+        System.out.println("here 3");
         sequencer.start();
-        while (sequencer.isRunning()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        sequencer.setTickPosition(0);
+        this.positionTick = 0;
     }
 
+    /** Pause and restart playing at a certain position. */
     public void pause() {
         if (sequencer.isRunning()) {
+            this.positionTick = sequencer.getTickPosition();
             sequencer.stop();
         } else {
-            float tempo = sequencer.getTempoInMPQ();
             sequencer.start();
-            sequencer.setTempoInMPQ(tempo);
+            sequencer.setTickPosition(positionTick);
         }
     }
 
+    /** Stop the playing of the notes and restart to position zero. */
     public void stop() {
         if (sequencer.isRunning()) {
             sequencer.stop();
+            this.positionTick = 0;
         }
     }
 

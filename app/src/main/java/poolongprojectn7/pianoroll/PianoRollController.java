@@ -115,6 +115,7 @@ public class PianoRollController extends Pane{
         }else{
             model.setOctave(model.getOctave() + 1);
         }
+        view.updateAll();
     };
 
     EventHandler<ActionEvent> handlerPartition = event -> {
@@ -123,7 +124,7 @@ public class PianoRollController extends Pane{
         int r = row == null ? 0 : row;
         Integer column = GridPane.getColumnIndex(source);
         int c = column == null ? 0 : column;
-        model.changeNoteState(r, c);
-        view.update(r,c);
+        model.changeNoteState(model.getMidiNoteNumberFromRow(r), c);
+        view.update(r,c); 
     };
 }

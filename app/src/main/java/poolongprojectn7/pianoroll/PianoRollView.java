@@ -19,13 +19,20 @@ public class PianoRollView extends GridPane{
                 this.add(rectangles[i][j], j, i);
             }
         }
-        
     }
 
     public void update(int i, int j){
         Color bg = i%2 == 0 ? Color.WHITE : Color.GRAY;
-        bg = model.isNoteActive(i, j) ? bg : Color.GREEN;
+        bg = model.isNoteActive(model.getMidiNoteNumberFromRow(i), j) ? Color.GREEN : bg;
         this.rectangles[i][j].setFill(bg);
+    }
+
+    public void updateAll() {
+        for(int i = 0; i < 12; i++){
+            for(int j = 0; j < 52; j++){
+                update(i, j);
+            }
+        }
     }
 
 

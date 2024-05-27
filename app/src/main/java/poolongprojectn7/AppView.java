@@ -73,25 +73,21 @@ public class AppView extends VBox {
     public void switchToCompositionView() {
         this.model.setCurrentView(View.COMPOSITION);
         File f = new File(exportFilePath + this.model.getSelectedTrack() + ".mid");
-        // this.pianoView.getChildren().remove(this.piano);
         if(f.exists() && !f.isDirectory()) { 
 
             try {
                 this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
             }
             catch (InvalidMidiDataException e ) {
-                System.out.println("midi");
                 this.piano = new PianoRoll();
             }
             catch (IOException e ) {
-                System.out.println("IO");
                 this.piano = new PianoRoll();
             }
         }
         else {
             this.piano = new PianoRoll();
         }
-        // this.pianoView.getChildren().add(this.piano);
         this.pianoView = new HBox(this.browser, this.piano);
         this.getChildren().removeAll(this.pianoView, this.playlist);
         this.getChildren().addAll(this.pianoView);
