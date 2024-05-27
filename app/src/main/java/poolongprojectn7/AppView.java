@@ -8,6 +8,8 @@ import poolongprojectn7.browersComponent.Browser;
 import poolongprojectn7.pianoroll.PianoRoll;
 import poolongprojectn7.toolbarcomponent.ToolBarComponent;
 import java.io.File;
+
+import javafx.geometry.Insets;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeView;
 import java.io.IOException;
