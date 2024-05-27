@@ -117,6 +117,7 @@ public class PianoRollController extends Pane{
         Note note = new Note(model.getOctave(), noteIndex, 100, 200);
         try {
             pattern.addNote(note, 0);
+            pattern.setInstrument(this.model.getPattern().getInstrument());
             Sequencer sequencer = MidiSystem.getSequencer();
             sequencer.open();
             sequencer.setSequence(pattern.getSequence());
