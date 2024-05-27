@@ -2,11 +2,15 @@ package poolongprojectn7;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import poolongprojectn7.AppModel.View;
 import poolongprojectn7.PlaylistComponent.PlaylistComponent;
 import poolongprojectn7.browersComponent.Browser;
 import poolongprojectn7.pianoroll.PianoRoll;
 import poolongprojectn7.toolbarcomponent.ToolBarComponent;
+import poolongprojectn7.MixerComponent.MixerComponent;
 import java.io.File;
+
+import javafx.geometry.Insets;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeView;
 import java.io.IOException;
@@ -26,23 +30,26 @@ public class AppView extends VBox {
     private PlaylistComponent playlist;
     private Browser browser;
     private HBox pianoView;
-
+    private MixerComponent mixer; 
     /** Constructor view part of the MVC of the application. */
     public AppView(AppModel model, Runnable handler) {
         this.model = model;
 
         // Creating toolbar
-        this.toolBar = new ToolBarComponent(this).getToolbar();
+
+        this.toolBar = new ToolBarComponent(this, this.model).getToolbar();
         try {
             this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
         }
         catch (InvalidMidiDataException | IOException e ) {
             this.piano = new PianoRoll();
         }
-        this.browser = new Browser(this);
         this.playlist = new PlaylistComponent();
+        this.browser = new Browser(this);
+        this.pianoView = new HBox(this.browser, this.piano);
+        this.mixer = new MixerComponent(); 
 
-        this.getChildren().addAll(this.toolBar, this.playlist);
+        this.getChildren().addAll(this.toolBar, this.playlist, this.mixer);
 
         if (!Files.exists(Paths.get(exportFilePath))) {
             new File(exportFilePath).mkdirs();
@@ -53,13 +60,13 @@ public class AppView extends VBox {
         return this.model;
     }
 
-    public PianoRoll getPiano() {
+    public PianoRoll getPianoRoll() {
         return this.piano;
     }
 
     // Method to switch to Overview view
     public void switchToOverview() {
-        this.getChildren().removeAll(this.playlist, this.pianoView);
+        this.model.setCurrentView(View.OVERVIEW);
         // Export current track pattern to midi
         try {
             File f = new File(exportFilePath + "test" + ".mid");
@@ -73,22 +80,26 @@ public class AppView extends VBox {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.getChildren().addAll(this.playlist);
+        this.getChildren().removeAll(this.playlist, this.pianoView, this.mixer);
+        this.getChildren().addAll(this.playlist, this.mixer);
     }
 
     // Method to switch to Composition View view
     public void switchToCompositionView() {
-        this.getChildren().removeAll(this.pianoView, this.playlist);
+        this.model.setCurrentView(View.COMPOSITION);
+        
         // Import current track pattern
         try {
-            System.out.println("proute");
             this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
         }
         catch (InvalidMidiDataException | IOException e ) {
             this.piano = new PianoRoll();
         }
-        this.browser.updateBrowser();
-        this.pianoView = new HBox(this.browser.getBrowser(), this.piano);
+        
+
+        this.pianoView = new HBox(this.browser, this.piano);
+        this.getChildren().removeAll(this.pianoView, this.playlist, this.mixer);
+
         this.getChildren().addAll(this.pianoView);
     }
 }

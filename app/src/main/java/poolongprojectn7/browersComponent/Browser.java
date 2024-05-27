@@ -24,7 +24,7 @@ public class Browser extends TreeView<String> {
     @SuppressWarnings("unchecked")
     public Browser(AppView view) {
         this.view = view;
-        this.pattern = this.view.getPiano().getModel().getPattern();
+        this.pattern = this.view.getPianoRoll().getModel().getPattern();
         // Creation of the tree
         TreeItem<String> root = new TreeItem<>("root");
         this.browser = new TreeView<>(root);
@@ -44,7 +44,7 @@ public class Browser extends TreeView<String> {
                 try {
                     this.pattern.setInstrument(this.instrumentHashMap.get(selectedItem));
                 } catch (InvalidMidiDataException e) {
-                    e.printStackTrace();
+                   e.printStackTrace();
                 }
             }
         });
@@ -78,7 +78,7 @@ public class Browser extends TreeView<String> {
     }
 
     public void updateBrowser() {
-        this.pattern = this.view.getPiano().getModel().getPattern();
+        this.pattern = this.view.getPianoRoll().getModel().getPattern();
     }
 
 }
