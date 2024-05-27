@@ -1,7 +1,6 @@
 package poolongprojectn7.pianoroll;
 
 import javafx.geometry.*;
-
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
@@ -15,7 +14,7 @@ import poolongprojectn7.Pattern;
 import javafx.event.*;
 import javax.sound.midi.*;
 
-public class PianoRollController extends Pane{
+public class PianoRollController extends Pane {
 
     protected final Background WHITE_BACKGROUD = new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
     protected final Background BLACK_BACKGROUD = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
@@ -25,22 +24,20 @@ public class PianoRollController extends Pane{
     protected final Border BLACK_BORDER = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
     protected final Border WHITE_BORDER = new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
     protected final Border GRAY_BORDER = new Border(new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
-    private final String[] NOTE_LETTERS = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
-
-
+    private final String[] NOTE_LETTERS = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 
     private PianoRollModel model;
     private PianoRollView view;
     private StackPane partition;
     private final GridPane buttonPartition = new GridPane();
 
-    public PianoRollController(PianoRollModel model, PianoRollView view){
+    public PianoRollController(PianoRollModel model, PianoRollView view) {
         this.model = model;
         this.view = view;
         partition = new StackPane(view,buttonPartition);
         Group root = new Group();
-        for(int i = 0; i < 12; i++){
-            root.getChildren().add(newButton(50, 30 * i, NOTE_LETTERS[i]));
+        for (int i = 11; i >= 0; i--) {
+            root.getChildren().add(newButton(50, 30 * (11 - i), NOTE_LETTERS[i]));
         }
         StackPane piano = new StackPane(root);
         HBox octaves = new HBox(new Separator(Orientation.VERTICAL));
@@ -77,14 +74,14 @@ public class PianoRollController extends Pane{
         this.getChildren().add(hbox);
     }
 
-    private Button newButton(double x, double y, String text){
+    private Button newButton(double x, double y, String text) {
         Button button = new Button();
         button.setText(text);
-        if(text.length() > 1){
+        if (text.length() > 1) {
             button.setTextFill(Color.WHITE);
             button.setBackground(BLACK_BACKGROUD);
             button.setBorder(WHITE_BORDER);
-        }else{
+        } else {
             button.setTextFill(Color.BLACK);
             button.setBackground(WHITE_BACKGROUD);
             button.setBorder(BLACK_BORDER);
@@ -96,25 +93,25 @@ public class PianoRollController extends Pane{
         button.setPrefSize(120, 30);
         return button;
     }
-    
-    private Button newRoundButton(String text){
+
+    private Button newRoundButton(String text) {
         Button button = new Button();
         button.setShape(new Circle(30));
-        button.setText(text);  
+        button.setText(text);
         button.setTextFill(Color.BLACK);
         button.setBackground(WHITE_BACKGROUD);
         button.setBorder(BLACK_BORDER);
         button.setOnAction(handlerOctave);
         return button;
     }
-    
+
     EventHandler<ActionEvent> handlerNotes = event -> {
         Button source = (Button) event.getSource();
         String noteName = source.getText();
         int noteIndex = java.util.Arrays.asList(NOTE_LETTERS).indexOf(noteName);
 
         Pattern pattern = new Pattern();
-        Note note = new Note(model.getOctave(), noteIndex, 100, 200);
+        Note note = new Note(model.getOctave(), noteIndex, 100, 20);
         try {
             pattern.addNote(note, 0);
             pattern.setInstrument(this.model.getPattern().getInstrument());
@@ -123,7 +120,7 @@ public class PianoRollController extends Pane{
             sequencer.setSequence(pattern.getSequence());
             sequencer.start();
             while (sequencer.isRunning()) {
-                Thread.sleep(500);
+                Thread.sleep(300);
             }
             sequencer.close();
         } catch (MidiUnavailableException | InvalidMidiDataException | InterruptedException | InvalidNoteException e) {
@@ -133,13 +130,12 @@ public class PianoRollController extends Pane{
 
     EventHandler<ActionEvent> handlerOctave = event -> {
         Button source = (Button) event.getSource();
-        if(source.getText().equals("-")){
+        if (source.getText().equals("-")) {
             model.setOctave(model.getOctave() - 1);
-        }else{
+        } else {
             model.setOctave(model.getOctave() + 1);
         }
     };
-    
 
     EventHandler<ActionEvent> handlerPartition = event -> {
         Button source = (Button) event.getSource();
