@@ -2,12 +2,15 @@ package poolongprojectn7;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import poolongprojectn7.AppModel.View;
 import poolongprojectn7.PlaylistComponent.PlaylistComponent;
 import poolongprojectn7.browersComponent.Browser;
 import poolongprojectn7.pianoroll.PianoRoll;
 import poolongprojectn7.toolbarcomponent.ToolBarComponent;
 import poolongprojectn7.MixerComponent.MixerComponent;
 import java.io.File;
+
+import javafx.geometry.Insets;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeView;
 import java.io.IOException;
@@ -33,9 +36,7 @@ public class AppView extends VBox {
         this.model = model;
 
         // Creating toolbar
-        this.toolBar = new ToolBarComponent(this).getToolbar();
-        Pattern pattern = new Pattern();
-        this.browser = new Browser(this, pattern).getBrowser();
+        this.toolBar = new ToolBarComponent(this, this.model).getToolbar();
         this.piano = new PianoRoll();
         this.playlist = new PlaylistComponent();
         this.pianoView = new HBox(this.browser, this.piano);
@@ -52,8 +53,13 @@ public class AppView extends VBox {
         return this.model;
     }
 
+    public PianoRoll getPianoRoll() {
+        return this.piano;
+    }
+
     // Method to switch to Overview view
     public void switchToOverview() {
+        this.model.setCurrentView(View.OVERVIEW);
         // Export current track pattern to midi
         try {
             String name = this.model.getSelectedTrack();
@@ -67,8 +73,8 @@ public class AppView extends VBox {
 
     // Method to switch to Composition View view
     public void switchToCompositionView() {
+        this.model.setCurrentView(View.COMPOSITION);
         File f = new File(exportFilePath + this.model.getSelectedTrack() + ".mid");
-        this.pianoView.getChildren().remove(this.piano);
         if(f.exists() && !f.isDirectory()) { 
             // Import current track pattern
             try {
@@ -81,8 +87,10 @@ public class AppView extends VBox {
         else {
             this.piano = new PianoRoll();
         }
-        this.pianoView.getChildren().add(this.piano);
+
+        this.pianoView = new HBox(this.browser, this.piano);
         this.getChildren().removeAll(this.pianoView, this.playlist, this.mixer);
+
         this.getChildren().addAll(this.pianoView);
     }
 }

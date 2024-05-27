@@ -3,7 +3,10 @@ package poolongprojectn7.toolbarcomponent;
 import javafx.geometry.Pos;            // Import tools to align elements of a layout
 import javafx.scene.control.*;         // Import JavaFX's user interface components.
 import javafx.scene.layout.HBox;       // Import JavaFX's horizontal layout.
+import poolongprojectn7.AppModel;
 import poolongprojectn7.AppView;
+
+import javax.swing.text.View;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.sound.sampled.AudioFormat;
@@ -23,14 +26,16 @@ public class ToolBarComponent extends ToolBar {
     private static final String SOUND_METRONOM_NAME = "metronome.wav";
     private ToolBar toolbar;            // Attribute of ToolBar type wich is the tool bar of the application
     private AppView view;
+    private AppModel appModel;
     private int bpm;
     private boolean metronomeActivated = false;
     private Clip metronomeSound = null;
     
     @SuppressWarnings("unchecked")
-    public ToolBarComponent(AppView view) {                 // Creation of the tool bar
+    public ToolBarComponent(AppView view, AppModel appModel) {                 // Creation of the tool bar
         this.toolbar = new ToolBar();                       // Initialisation
         this.view = view;
+        this.appModel = appModel;
 
         // Menu Files with its options
         MenuButton menuFiles = new MenuButton("Files");            // Drop-down menu named "Files"
@@ -56,8 +61,11 @@ public class ToolBarComponent extends ToolBar {
 
         // Buttons to control the playing of the music
         Button play = createButtonWithImage("Play.png", "Start");
+        play.setOnAction(handlerPlayButton);
         Button pause = createButtonWithImage("Pause.png", "Pause");
+        pause.setOnAction(handlerPauseButton);
         Button stop = createButtonWithImage("Stop.png", "Stop");
+        stop.setOnAction(handlerStopButton);
 
         // Slider for the BPM
         Slider bpmSlider = new Slider(50, 250, 120);  // Initialisation of the slider with the bounds and the default value 120
@@ -129,6 +137,33 @@ public class ToolBarComponent extends ToolBar {
     // Method to handle actions from the Composition View button
     EventHandler<ActionEvent> handlerCompositionView = event -> {
         this.view.switchToCompositionView();
+    };
+
+    /** Handler for play button. */
+    EventHandler<ActionEvent> handlerPlayButton = event -> {
+        if (this.appModel.getCurrentView() == AppModel.View.COMPOSITION) {
+            view.getPianoRoll().getModel().getPattern().play();
+        } else {
+
+        }
+    };
+
+    /** Handler for pause button. */
+    EventHandler<ActionEvent> handlerPauseButton = event -> {
+        if (this.appModel.getCurrentView() == AppModel.View.COMPOSITION) {
+            view.getPianoRoll().getModel().getPattern().pause();
+        } else {
+            
+        }
+    };
+
+    /** Handler for stop button. */
+    EventHandler<ActionEvent> handlerStopButton = event -> {
+        if (this.appModel.getCurrentView() == AppModel.View.COMPOSITION) {
+            view.getPianoRoll().getModel().getPattern().stop();
+        } else {
+
+        }
     };
 
     // Method to create an ImageView from the name of an image file
