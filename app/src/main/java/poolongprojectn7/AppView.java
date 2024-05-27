@@ -24,7 +24,7 @@ public class AppView extends VBox {
     private ToolBar toolBar;
     private PianoRoll piano;
     private PlaylistComponent playlist;
-    private TreeView<String> browser;
+    private Browser browser;
     private HBox pianoView;
 
     /** Constructor view part of the MVC of the application. */
@@ -33,11 +33,14 @@ public class AppView extends VBox {
 
         // Creating toolbar
         this.toolBar = new ToolBarComponent(this).getToolbar();
-        Pattern pattern = new Pattern();
-        this.browser = new Browser(this, pattern).getBrowser();
-        this.piano = new PianoRoll();
+        try {
+            this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
+        }
+        catch (InvalidMidiDataException | IOException e ) {
+            this.piano = new PianoRoll();
+        }
+        this.browser = new Browser(this);
         this.playlist = new PlaylistComponent();
-        this.pianoView = new HBox(this.browser, this.piano);
 
         this.getChildren().addAll(this.toolBar, this.playlist);
 
@@ -50,37 +53,42 @@ public class AppView extends VBox {
         return this.model;
     }
 
+    public PianoRoll getPiano() {
+        return this.piano;
+    }
+
     // Method to switch to Overview view
     public void switchToOverview() {
+        this.getChildren().removeAll(this.playlist, this.pianoView);
         // Export current track pattern to midi
         try {
-            String name = this.model.getSelectedTrack();
-            this.piano.getModel().getPattern().save(exportFilePath, name);
+            File f = new File(exportFilePath + "test" + ".mid");
+            if(f.exists() && !f.isDirectory()) {
+                f.delete();
+            }
+            this.piano.getModel().getPattern().save(exportFilePath, this.model.getSelectedTrack());
+            System.out.println("fesse");
+            System.out.println(this.piano.getModel().getPattern().getInstrument());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.getChildren().removeAll(this.playlist, this.pianoView);
         this.getChildren().addAll(this.playlist);
     }
 
     // Method to switch to Composition View view
     public void switchToCompositionView() {
-        File f = new File(exportFilePath + this.model.getSelectedTrack() + ".mid");
-        this.pianoView.getChildren().remove(this.piano);
-        if(f.exists() && !f.isDirectory()) { 
-            // Import current track pattern
-            try {
-                this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
-            }
-            catch (InvalidMidiDataException | IOException e ) {
-                this.piano = new PianoRoll();
-            }
+        this.getChildren().removeAll(this.pianoView, this.playlist);
+        // Import current track pattern
+        try {
+            System.out.println("proute");
+            this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
         }
-        else {
+        catch (InvalidMidiDataException | IOException e ) {
             this.piano = new PianoRoll();
         }
-        this.pianoView.getChildren().add(this.piano);
-        this.getChildren().removeAll(this.pianoView, this.playlist);
+        this.browser.updateBrowser();
+        this.pianoView = new HBox(this.browser.getBrowser(), this.piano);
         this.getChildren().addAll(this.pianoView);
     }
 }

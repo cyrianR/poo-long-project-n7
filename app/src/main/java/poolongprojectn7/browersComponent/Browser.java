@@ -22,9 +22,9 @@ public class Browser extends TreeView<String> {
 
 
     @SuppressWarnings("unchecked")
-    public Browser(AppView view, Pattern pattern) {
+    public Browser(AppView view) {
         this.view = view;
-        this.pattern = pattern;
+        this.pattern = this.view.getPiano().getModel().getPattern();
         // Creation of the tree
         TreeItem<String> root = new TreeItem<>("root");
         this.browser = new TreeView<>(root);
@@ -76,4 +76,9 @@ public class Browser extends TreeView<String> {
         }
         return instrumentHashMap;
     }
+
+    public void updateBrowser() {
+        this.pattern = this.view.getPiano().getModel().getPattern();
+    }
+
 }
