@@ -9,7 +9,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.*;
+import poolongprojectn7.InvalidNoteException;
+import poolongprojectn7.Note;
+import poolongprojectn7.Pattern;
 import javafx.event.*;
+import javax.sound.midi.*;
 
 public class PianoRollController extends Pane{
 
@@ -106,6 +110,24 @@ public class PianoRollController extends Pane{
     
     EventHandler<ActionEvent> handlerNotes = event -> {
         Button source = (Button) event.getSource();
+        String noteName = source.getText();
+        int noteIndex = java.util.Arrays.asList(NOTE_LETTERS).indexOf(noteName);
+
+        Pattern pattern = new Pattern();
+        Note note = new Note(model.getOctave(), noteIndex, 100, 200);
+        try {
+            pattern.addNote(note, 0);
+            Sequencer sequencer = MidiSystem.getSequencer();
+            sequencer.open();
+            sequencer.setSequence(pattern.getSequence());
+            sequencer.start();
+            while (sequencer.isRunning()) {
+                Thread.sleep(500);
+            }
+            sequencer.close();
+        } catch (MidiUnavailableException | InvalidMidiDataException | InterruptedException | InvalidNoteException e) {
+            e.printStackTrace();
+        }
     };
 
     EventHandler<ActionEvent> handlerOctave = event -> {
@@ -116,6 +138,7 @@ public class PianoRollController extends Pane{
             model.setOctave(model.getOctave() + 1);
         }
     };
+    
 
     EventHandler<ActionEvent> handlerPartition = event -> {
         Button source = (Button) event.getSource();
