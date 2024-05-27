@@ -23,7 +23,7 @@ public class PianoRollModel {
     /* Maximum index for a note. */
     final int MAX_NOTE_INDEX = 11;
     /* Piano vertical length. */
-    final int PIANO_LENGTH = 52;
+    final int PIANO_LENGTH = 128;
     /* Piano horizontal length. Corresponds to the maximum midi value for a note. */
     final int PIANO_HEIGHT = (MAX_NOTE_INDEX + 1) * (MAX_OCTAVE + 1);
     /* Fixed note tick length. */
