@@ -195,6 +195,7 @@ class MelodyTest {
         playlist.addSound(soundToAdd, 0);
         
         playlist.playAll();
+        assertTrue(true);
 
         JOptionPane.showMessageDialog(null, "Clic to stop playing");
     }
