@@ -39,6 +39,7 @@ public class AppView extends VBox {
         this.toolBar = new ToolBarComponent(this, this.model).getToolbar();
         this.piano = new PianoRoll();
         this.playlist = new PlaylistComponent();
+        this.browser = new Browser(this);
         this.pianoView = new HBox(this.browser, this.piano);
         this.mixer = new MixerComponent(); 
 
