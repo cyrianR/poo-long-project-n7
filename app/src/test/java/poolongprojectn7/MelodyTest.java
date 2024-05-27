@@ -197,7 +197,8 @@ class MelodyTest {
         playlist.playAll();
         assertTrue(true);
 
-        JOptionPane.showMessageDialog(null, "Clic to stop playing");
+        /* Unmute this to test */
+        //JOptionPane.showMessageDialog(null, "Clic to stop playing");
     }
 
 }
