@@ -149,7 +149,6 @@ class MelodyTest {
             createAndSaveMidi(pattern);
 
             /* Play a sequence saved in the past */
-            System.out.println(filePath);
             pattern = new Pattern(filePath, "test");
             pattern.export(filePath, "test_wav");
             playSequence(pattern);
