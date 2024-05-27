@@ -33,7 +33,8 @@ public class Browser extends TreeView<String> {
 
         browser.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             String selectedItem = newValue.getValue();
-            System.out.println(selectedItem);
+            // System.out.println(selectedItem);
+            
         });
 
     }

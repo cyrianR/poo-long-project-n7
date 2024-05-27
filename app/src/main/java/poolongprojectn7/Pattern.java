@@ -18,6 +18,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * Represents a pattern used by a piano roll to
  * manipulate the musical data in the piano roll.
  * This is a part of the piano roll model.
+ * 
  * @version Alpha
  */
 public class Pattern {
@@ -42,30 +43,38 @@ public class Pattern {
     private String path;
     /* Link between notes and the moment when they are called */
     private Map<Long, List<Note>> noteMap;
+    /* Sequencer used to play the sequence. */
+    private Sequencer sequencer = null;
 
     /**
      * Create a new pattern.
      */
     public Pattern() {
-        this.path = null; 
+        this.path = null;
         this.patternLength = 0;
         this.instrument = 0;
         this.noteMap = new HashMap<>();
         try {
+            System.out.println("OK ???");
             this.sequence = initSequence();
-        /* If the specified sequence's divisionType is not valid */
-        } catch (InvalidMidiDataException e) {
+            this.sequencer = MidiSystem.getSequencer();
+            this.sequencer.open();
+            /* If the specified sequence's divisionType is not valid */
+        } catch (InvalidMidiDataException | MidiUnavailableException e) {
             e.printStackTrace();
         }
     }
 
     /**
      * Load a pattern from a midi file passed in argument.
+     * 
      * @param filePath the path of the file
      * @param fileName the name of the file
-     * @throws InvalidMidiDataException if the File does not point to valid MIDI file data recognized by the system
-     * @throws IOException if an I/O exception occurs
-     * Example: Pattern pattern = new Patten("/home/usr/Music/", "test");
+     * @throws InvalidMidiDataException if the File does not point to valid MIDI
+     *                                  file data recognized by the system
+     * @throws IOException              if an I/O exception occurs
+     *                                  Example: Pattern pattern = new
+     *                                  Patten("/home/usr/Music/", "test");
      */
     public Pattern(String filePath, String fileName) throws InvalidMidiDataException, IOException {
         this.path = filePath + fileName + ".mid";
@@ -76,12 +85,20 @@ public class Pattern {
         this.noteMap = getNoteMap(this.sequenceTracks);
         setInstrument(getInstrument(this.sequence));
         updatePatternLength();
+        try {
+            this.sequencer = MidiSystem.getSequencer();
+            this.sequencer.open();
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Initiate the sequence of the pattern.
+     * 
      * @return the initialised sequence
-     * @throws InvalidMidiDataException if the specified sequence's divisionType is not valid
+     * @throws InvalidMidiDataException if the specified sequence's divisionType is
+     *                                  not valid
      */
     private Sequence initSequence() throws InvalidMidiDataException {
         Sequence sequence = null;
@@ -91,8 +108,10 @@ public class Pattern {
     }
 
     /**
-     * Add a note to the noteMap and creates a new ArrayList if the key does not exist.
-     * @param note the note
+     * Add a note to the noteMap and creates a new ArrayList if the key does not
+     * exist.
+     * 
+     * @param note      the note
      * @param startTick the start tick of the note
      */
     private void addNoteToMap(Note note, Long startTick) {
@@ -101,7 +120,8 @@ public class Pattern {
 
     /**
      * Remove a note to the noteMap if it exists.
-     * @param note the note
+     * 
+     * @param note      the note
      * @param startTick the start tick of the note
      */
     private void removeNoteToMap(Note note, Long startTick) {
@@ -119,7 +139,8 @@ public class Pattern {
 
     /**
      * Add a note to the pattern at a certain time.
-     * @param note note to be added
+     * 
+     * @param note      note to be added
      * @param startTick starting time of the note in ticks
      * @throws InvalidNoteException if the note attributs are incorrect
      */
@@ -148,7 +169,7 @@ public class Pattern {
         /* MidiEvent for note-on and note-off messages */
         MidiEvent noteOnEvent = new MidiEvent(noteOnMessage, startTick);
         MidiEvent noteOffEvent = new MidiEvent(noteOffMessage, endTick);
-        
+
         /* Add note events to the corresponding track */
         sequenceTracks[CHANNEL].add(noteOnEvent);
         sequenceTracks[CHANNEL].add(noteOffEvent);
@@ -158,16 +179,17 @@ public class Pattern {
 
     /**
      * Remove a specific note from the pattern.
-     * @param note the note to be removed
+     * 
+     * @param note      the note to be removed
      * @param startTick the starting tick of the note
      */
     private void removeNote(Note note, long startTick) {
         /* Remove the note to the note map */
         removeNoteToMap(note, startTick);
-        
+
         int midiNote = note.getMidiNoteNumber();
         long duration = note.getDurationTicks();
-        
+
         Track noteTrack = this.sequenceTracks[CHANNEL];
 
         /* Browse through the events of the track associated to the note */
@@ -201,18 +223,21 @@ public class Pattern {
 
     /**
      * Remove a specific note from the pattern.
+     * 
      * @param midiNoteNumber the midi note number of the note to be removed
-     * @param startTick the starting tick of the note
+     * @param startTick      the starting tick of the note
      */
     public void removeNote(int midiNoteNumber, long startTick) {
         List<Note> notes = noteMap.get(startTick);
         if (notes != null) {
-            /* Create an iterator to avoid ConcurrentModificationException
-             by modifying the notes list */
+            /*
+             * Create an iterator to avoid ConcurrentModificationException
+             * by modifying the notes list
+             */
             Iterator<Note> iterator = notes.iterator();
             while (iterator.hasNext()) {
                 Note note = iterator.next();
-                /* Remove the note from the iterator and the note itself */ 
+                /* Remove the note from the iterator and the note itself */
                 if (note.getMidiNoteNumber() == midiNoteNumber) {
                     iterator.remove();
                     removeNote(note, startTick);
@@ -224,8 +249,6 @@ public class Pattern {
             }
         }
     }
-    
-    
 
     /**
      * Update the pattern length attribut.
@@ -246,6 +269,7 @@ public class Pattern {
 
     /**
      * Obtains the sequence of the pattern.
+     * 
      * @return the sequence of the pattern
      */
     public Sequence getSequence() {
@@ -254,6 +278,7 @@ public class Pattern {
 
     /**
      * Obtains the pattern length.
+     * 
      * @return the pattern length
      */
     public long getPatternLength() {
@@ -262,6 +287,7 @@ public class Pattern {
 
     /**
      * Obtains the instrument of the pattern.
+     * 
      * @return the instrument of the pattern
      */
     public int getInstrument() {
@@ -270,6 +296,7 @@ public class Pattern {
 
     /**
      * Obtains the instrument used in the sequence.
+     * 
      * @param sequence the sequence
      * @return the instrument of the pattern
      */
@@ -291,6 +318,7 @@ public class Pattern {
 
     /**
      * Change the instrument of the pattern
+     * 
      * @param instrument the number if the instrument
      * @throws InvalidMidiDataException if MIDI data is not valid
      */
@@ -312,6 +340,7 @@ public class Pattern {
 
     /**
      * Obtains the number of the channel of the pattern.
+     * 
      * @return the number of the channel of the pattern
      */
     public int getChannel() {
@@ -320,6 +349,7 @@ public class Pattern {
 
     /**
      * Obtains the note map.
+     * 
      * @return the note map
      */
     public Map<Long, List<Note>> getNoteMap() {
@@ -328,12 +358,13 @@ public class Pattern {
 
     /**
      * Obtains the note map from a sequence of tracks.
+     * 
      * @param sequenceTracks the sequence of tracks
      * @return the note map
      */
     private Map<Long, List<Note>> getNoteMap(Track[] sequenceTracks) {
         Map<Long, List<Note>> notes = new HashMap<>();
-        HashMap<Integer, List<Long>> activeNotes = new HashMap<>();    
+        HashMap<Integer, List<Long>> activeNotes = new HashMap<>();
 
         Track noteTrack = sequenceTracks[CHANNEL];
 
@@ -347,14 +378,14 @@ public class Pattern {
                 int key = shortMessage.getData1();
                 int velocity = shortMessage.getData2();
                 long tick = event.getTick();
-                
+
                 /* Save the startTick if the note is activated */
                 if (shortMessage.getCommand() == ShortMessage.NOTE_ON && velocity > 0) {
                     activeNotes.computeIfAbsent(key, k -> new ArrayList<>()).add(tick);
-                } 
+                }
                 /* Get the startTick and save the note otherwise */
-                else if (shortMessage.getCommand() == ShortMessage.NOTE_OFF || 
-                            (shortMessage.getCommand() == ShortMessage.NOTE_ON && velocity == 0)) {
+                else if (shortMessage.getCommand() == ShortMessage.NOTE_OFF ||
+                        (shortMessage.getCommand() == ShortMessage.NOTE_ON && velocity == 0)) {
                     List<Long> startTicks = activeNotes.get(key);
                     if (startTicks != null && !startTicks.isEmpty()) {
                         Long startTick = startTicks.remove(0);
@@ -370,14 +401,15 @@ public class Pattern {
             }
         }
         return notes;
-    }    
+    }
 
     /**
      * Save the pattern's sequence in a midi file.
+     * 
      * @param filePath the path of the file
      * @param fileName the name of the file
      * @throws IOException if the given file path is incorrect
-     * Example: patten.save("/home/usr/Music/", "test");
+     *                     Example: patten.save("/home/usr/Music/", "test");
      */
     public void save(String filePath, String fileName) throws IOException {
         this.path = filePath + fileName + ".mid";
@@ -386,9 +418,10 @@ public class Pattern {
 
     /**
      * Export the pattern to a .wav file.
+     * 
      * @param filePath the path of the file
      * @param fileName the name of the file
-     * Example: patten.export("/home/usr/Music/", "test");
+     *                 Example: patten.export("/home/usr/Music/", "test");
      */
     public void export(String filePath, String fileName) {
         try {
@@ -397,6 +430,43 @@ public class Pattern {
             stream.close();
         } catch (UnsupportedAudioFileException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Close the pattern.
+     */
+    public void close() {
+        sequencer.close();
+    }
+
+    public void play() {
+        if (sequencer.isRunning()) {
+            sequencer.stop();
+        }
+        sequencer.start();
+        while (sequencer.isRunning()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void pause() {
+        if (sequencer.isRunning()) {
+            sequencer.stop();
+        } else {
+            float tempo = sequencer.getTempoInMPQ();
+            sequencer.start();
+            sequencer.setTempoInMPQ(tempo);
+        }
+    }
+
+    public void stop() {
+        if (sequencer.isRunning()) {
+            sequencer.stop();
         }
     }
 
