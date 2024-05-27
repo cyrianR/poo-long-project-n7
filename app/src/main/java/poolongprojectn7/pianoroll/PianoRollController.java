@@ -1,7 +1,6 @@
 package poolongprojectn7.pianoroll;
 
 import javafx.geometry.*;
-
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -10,7 +9,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.*;
+import poolongprojectn7.InvalidNoteException;
+import poolongprojectn7.Note;
+import poolongprojectn7.Pattern;
 import javafx.event.*;
+import javax.sound.midi.*;
 
 public class PianoRollController extends ScrollPane{
 
@@ -28,6 +31,7 @@ public class PianoRollController extends ScrollPane{
     private PianoRollView view;
     private StackPane partition;
     private final GridPane buttonPartition = new GridPane();
+
 
     /**
      * Create a controller
@@ -88,11 +92,11 @@ public class PianoRollController extends ScrollPane{
     private Button newButton(double x, double y, String text){
         Button button = new Button();
         button.setText(text);
-        if(text.length() > 1){
+        if (text.length() > 1) {
             button.setTextFill(Color.WHITE);
             button.setBackground(BLACK_BACKGROUD);
             button.setBorder(WHITE_BORDER);
-        }else{
+        } else {
             button.setTextFill(Color.BLACK);
             button.setBackground(WHITE_BACKGROUD);
             button.setBorder(BLACK_BORDER);
@@ -113,7 +117,7 @@ public class PianoRollController extends ScrollPane{
     private Button newRoundButton(String text){
         Button button = new Button();
         button.setShape(new Circle(30));
-        button.setText(text);  
+        button.setText(text);
         button.setTextFill(Color.BLACK);
         button.setBackground(WHITE_BACKGROUD);
         button.setBorder(BLACK_BORDER);
@@ -121,11 +125,31 @@ public class PianoRollController extends ScrollPane{
         return button;
     }
 
+
     /**
      * The handler that play the note that has been intercated with.
      */
     EventHandler<ActionEvent> handlerNotes = event -> {
         Button source = (Button) event.getSource();
+        String noteName = source.getText();
+        int noteIndex = java.util.Arrays.asList(NOTE_LETTERS).indexOf(noteName);
+
+        Pattern pattern = new Pattern();
+        Note note = new Note(model.getOctave(), noteIndex, 100, 20);
+        try {
+            pattern.addNote(note, 0);
+            pattern.setInstrument(this.model.getPattern().getInstrument());
+            Sequencer sequencer = MidiSystem.getSequencer();
+            sequencer.open();
+            sequencer.setSequence(pattern.getSequence());
+            sequencer.start();
+            while (sequencer.isRunning()) {
+                Thread.sleep(300);
+            }
+            sequencer.close();
+        } catch (MidiUnavailableException | InvalidMidiDataException | InterruptedException | InvalidNoteException e) {
+            e.printStackTrace();
+        }
     };
 
     /**
@@ -133,9 +157,9 @@ public class PianoRollController extends ScrollPane{
      */
     EventHandler<ActionEvent> handlerOctave = event -> {
         Button source = (Button) event.getSource();
-        if(source.getText().equals("-")){
+        if (source.getText().equals("-")) {
             model.setOctave(model.getOctave() - 1);
-        }else{
+        } else {
             model.setOctave(model.getOctave() + 1);
         }
         view.updateAll();

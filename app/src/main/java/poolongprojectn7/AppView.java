@@ -38,7 +38,6 @@ public class AppView extends VBox {
         this.toolBar = new ToolBarComponent(this, this.model).getToolbar();
         this.piano = new PianoRoll();
         this.playlist = new PlaylistComponent();
-        this.browser = new Browser(this).getBrowser();
         this.pianoView = new HBox(this.browser, this.piano);
 
         this.getChildren().addAll(this.toolBar, this.playlist);
@@ -62,7 +61,6 @@ public class AppView extends VBox {
         // Export current track pattern to midi
         try {
             String name = this.model.getSelectedTrack();
-            System.out.println(name);
             this.piano.getModel().getPattern().save(exportFilePath, name);
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,14 +74,11 @@ public class AppView extends VBox {
         this.model.setCurrentView(View.COMPOSITION);
         File f = new File(exportFilePath + this.model.getSelectedTrack() + ".mid");
         if(f.exists() && !f.isDirectory()) { 
-
+            // Import current track pattern
             try {
                 this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
             }
-            catch (InvalidMidiDataException e ) {
-                this.piano = new PianoRoll();
-            }
-            catch (IOException e ) {
+            catch (InvalidMidiDataException | IOException e ) {
                 this.piano = new PianoRoll();
             }
         }
