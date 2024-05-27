@@ -4,6 +4,7 @@ import javafx.geometry.*;
 
 import javafx.scene.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -11,7 +12,7 @@ import javafx.scene.shape.*;
 import javafx.scene.text.*;
 import javafx.event.*;
 
-public class PianoRollController extends Pane{
+public class PianoRollController extends ScrollPane{
 
     protected final Background WHITE_BACKGROUD = new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
     protected final Background BLACK_BACKGROUD = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
@@ -30,6 +31,11 @@ public class PianoRollController extends Pane{
     private StackPane partition;
     private final GridPane buttonPartition = new GridPane();
 
+    /**
+     * Create a controller
+     * @param model The model of the PianoRoll
+     * @param view The view of the PianoRoll
+     */
     public PianoRollController(PianoRollModel model, PianoRollView view){
         this.model = model;
         this.view = view;
@@ -41,7 +47,7 @@ public class PianoRollController extends Pane{
         StackPane piano = new StackPane(root);
         HBox octaves = new HBox(new Separator(Orientation.VERTICAL));
         for(int i = 0; i < 12; i++){
-            for(int j = 0; j < 52; j++){
+            for(int j = 0; j < 128; j++){
                 Button square = new Button();
                 square.setPrefSize(30, 30);
                 Border border = i%2 == 0 ? GRAY_BORDER : WHITE_BORDER;
@@ -70,9 +76,16 @@ public class PianoRollController extends Pane{
         Group partitionEtOctaves = new Group(octaves, partition);
         VBox pianoAndOctave = new VBox(octaveHBox, piano);
         HBox hbox = new HBox(pianoAndOctave, new Separator(Orientation.VERTICAL), partitionEtOctaves);
-        this.getChildren().add(hbox);
+        this.setContent(hbox);
     }
 
+    /**
+     * Create a new squarre button displaying a text at a disired position.
+     * @param x the x coordinate of the button
+     * @param y the y coordinate of the button
+     * @param text the text we want to display
+     * @return the button
+     */
     private Button newButton(double x, double y, String text){
         Button button = new Button();
         button.setText(text);
@@ -92,7 +105,12 @@ public class PianoRollController extends Pane{
         button.setPrefSize(120, 30);
         return button;
     }
-    
+
+    /**
+     * Create a new round button
+     * @param text le text to be displayed in the button
+     * @return the button
+     */
     private Button newRoundButton(String text){
         Button button = new Button();
         button.setShape(new Circle(30));
@@ -103,11 +121,17 @@ public class PianoRollController extends Pane{
         button.setOnAction(handlerOctave);
         return button;
     }
-    
+
+    /**
+     * The handler that play the note that has been intercated with
+     */
     EventHandler<ActionEvent> handlerNotes = event -> {
         Button source = (Button) event.getSource();
     };
 
+    /**
+     * The handler that increase or decrease the octave selected
+     */
     EventHandler<ActionEvent> handlerOctave = event -> {
         Button source = (Button) event.getSource();
         if(source.getText().equals("-")){
@@ -118,6 +142,9 @@ public class PianoRollController extends Pane{
         view.updateAll();
     };
 
+    /**
+     * The handler that update the model and the view of the PianoRoll
+     */
     EventHandler<ActionEvent> handlerPartition = event -> {
         Button source = (Button) event.getSource();
         Integer row = GridPane.getRowIndex(source);
