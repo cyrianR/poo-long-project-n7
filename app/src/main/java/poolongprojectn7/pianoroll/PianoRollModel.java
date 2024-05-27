@@ -23,7 +23,7 @@ public class PianoRollModel {
     /* Maximum index for a note. */
     final int MAX_NOTE_INDEX = 11;
     /* Piano vertical length. */
-    final int PIANO_LENGTH = 52;
+    final int PIANO_LENGTH = 128;
     /* Piano horizontal length. Corresponds to the maximum midi value for a note. */
     final int PIANO_HEIGHT = (MAX_NOTE_INDEX + 1) * (MAX_OCTAVE + 1);
     /* Fixed note tick length. */
@@ -64,9 +64,9 @@ public class PianoRollModel {
      * Used to set up an empty piano roll.
      */
     private void initNonActiveNotes() {
-        for(int i = 0; i < PIANO_HEIGHT; i++){
+        for(int i = 0; i <= PIANO_HEIGHT; i++){
             for(int j = 0; j < PIANO_LENGTH; j++){
-                this.activeNotes[i][j] = !this.activeNotes[i][j];
+                this.activeNotes[i][j] = false;
             }
         }
     }
@@ -90,16 +90,17 @@ public class PianoRollModel {
      * @param i actual displayed row position
      * @return midi note number
      */
-    private int getMidiNoteNumberFromRow(int i) {
+    public int getMidiNoteNumberFromRow(int i) {
         return (this.currentOctave + 1) * (MAX_NOTE_INDEX + 1) - i;
     }
     
     /**
      * Change a note state.
-     * @param i displayed row of the note
-     * @param j displayed column of the note
+     * @param i real row of the note
+     * @param j real column of the note
      */
     public void changeNoteState(int i, int j){
+
         if (isNoteActive(i, j)) {
             this.pattern.removeNote(this.getMidiNoteNumberFromRow(i), j * NOTE_TICK_LENGTH);
         } else {
@@ -115,8 +116,8 @@ public class PianoRollModel {
 
     /**
      * Test whether the note at the given index is active.
-     * @param i displayed row of the note
-     * @param j displayed column of the note
+     * @param i real row of the note
+     * @param j real column of the note
      * @return true when the note at the given index is active
      */
     public boolean isNoteActive(int i, int j){

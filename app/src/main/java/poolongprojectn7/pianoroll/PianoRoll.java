@@ -1,6 +1,7 @@
 package poolongprojectn7.pianoroll;
 
 import javafx.scene.layout.HBox;
+
 import java.io.IOException;
 import javax.sound.midi.InvalidMidiDataException;
 
@@ -20,8 +21,8 @@ public class PianoRoll extends HBox{
         PianoRollView view = new PianoRollView(model);
         PianoRollController controller = new PianoRollController(this.model, view);
         this.getChildren().add(controller);
+        view.updateAll();
     }
-
 
     public PianoRollModel getModel() {
         return this.model;
