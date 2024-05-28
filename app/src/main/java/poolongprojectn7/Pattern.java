@@ -444,12 +444,9 @@ public class Pattern {
 
     /** Play the notes in the pattern from position zero. */
     public void play() {
-        System.out.println("here 1");
         if (sequencer.isRunning()) {
             sequencer.stop();
-            System.out.println("here 2");
         }
-        System.out.println("here 3");
         sequencer.start();
         sequencer.setTickPosition(0);
         this.positionTick = 0;

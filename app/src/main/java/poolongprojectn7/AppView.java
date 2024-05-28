@@ -28,7 +28,7 @@ public class AppView extends VBox {
     private ToolBar toolBar;
     private PianoRoll piano;
     private PlaylistComponent playlist;
-    private TreeView<String> browser;
+    private Browser browser;
     private HBox pianoView;
     private MixerComponent mixer; 
     /** Constructor view part of the MVC of the application. */
@@ -36,8 +36,14 @@ public class AppView extends VBox {
         this.model = model;
 
         // Creating toolbar
+
         this.toolBar = new ToolBarComponent(this, this.model).getToolbar();
-        this.piano = new PianoRoll();
+        try {
+            this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
+        }
+        catch (InvalidMidiDataException | IOException e ) {
+            this.piano = new PianoRoll();
+        }
         this.playlist = new PlaylistComponent();
         this.browser = new Browser(this);
         this.pianoView = new HBox(this.browser, this.piano);
@@ -63,8 +69,12 @@ public class AppView extends VBox {
         this.model.setCurrentView(View.OVERVIEW);
         // Export current track pattern to midi
         try {
-            String name = this.model.getSelectedTrack();
-            this.piano.getModel().getPattern().save(exportFilePath, name);
+            File f = new File(exportFilePath + "test" + ".mid");
+            if(f.exists() && !f.isDirectory()) {
+                f.delete();
+            }
+            this.piano.getModel().getPattern().save(exportFilePath, this.model.getSelectedTrack());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -75,21 +85,17 @@ public class AppView extends VBox {
     // Method to switch to Composition View view
     public void switchToCompositionView() {
         this.model.setCurrentView(View.COMPOSITION);
-        File f = new File(exportFilePath + this.model.getSelectedTrack() + ".mid");
-        if(f.exists() && !f.isDirectory()) { 
-            // Import current track pattern
-            try {
-                this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
-            }
-            catch (InvalidMidiDataException | IOException e ) {
-                this.piano = new PianoRoll();
-            }
+        
+        // Import current track pattern
+        try {
+            this.piano = new PianoRoll(exportFilePath, this.model.getSelectedTrack());
         }
-        else {
+        catch (InvalidMidiDataException | IOException e ) {
             this.piano = new PianoRoll();
         }
-
-        this.pianoView = new HBox(this.browser, this.piano);
+        this.browser.getBrowser().setPrefWidth(300);
+        this.piano.setPrefWidth(1500);
+        this.pianoView = new HBox(this.browser.getBrowser(), this.piano);
         this.getChildren().removeAll(this.pianoView, this.playlist, this.mixer);
 
         this.getChildren().addAll(this.pianoView);

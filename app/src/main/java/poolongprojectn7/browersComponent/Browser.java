@@ -14,7 +14,7 @@ import javafx.scene.control.TreeView;
 
 public class Browser extends TreeView<String> {
 
-    //private Pattern pattern;
+    private Pattern pattern;
     private TreeView<String> browser;
     private AppView view;
     // liste de filtre des clicks
@@ -24,7 +24,7 @@ public class Browser extends TreeView<String> {
     @SuppressWarnings("unchecked")
     public Browser(AppView view) {
         this.view = view;
-        //this.pattern = pattern;
+        this.pattern = this.view.getPianoRoll().getModel().getPattern();
         // Creation of the tree
         TreeItem<String> root = new TreeItem<>("root");
         this.browser = new TreeView<>(root);
@@ -41,11 +41,11 @@ public class Browser extends TreeView<String> {
         browser.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             String selectedItem = newValue.getValue();
             if (this.instrumentHashMap.containsKey(selectedItem)) {
-                //try {
-                    //this.pattern.setInstrument(this.instrumentHashMap.get(selectedItem));
-                //} catch (InvalidMidiDataException e) {
-                //    e.printStackTrace();
-                //}
+                try {
+                    this.pattern.setInstrument(this.instrumentHashMap.get(selectedItem));
+                } catch (InvalidMidiDataException e) {
+                   e.printStackTrace();
+                }
             }
         });
 
@@ -76,4 +76,9 @@ public class Browser extends TreeView<String> {
         }
         return instrumentHashMap;
     }
+
+    public void updateBrowser() {
+        this.pattern = this.view.getPianoRoll().getModel().getPattern();
+    }
+
 }
