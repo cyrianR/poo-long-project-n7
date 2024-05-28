@@ -74,8 +74,6 @@ public class AppView extends VBox {
                 f.delete();
             }
             this.piano.getModel().getPattern().save(exportFilePath, this.model.getSelectedTrack());
-            System.out.println("fesse");
-            System.out.println(this.piano.getModel().getPattern().getInstrument());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -95,9 +93,9 @@ public class AppView extends VBox {
         catch (InvalidMidiDataException | IOException e ) {
             this.piano = new PianoRoll();
         }
-        
-
-        this.pianoView = new HBox(this.browser, this.piano);
+        this.browser.getBrowser().setPrefWidth(300);
+        this.piano.setPrefWidth(1500);
+        this.pianoView = new HBox(this.browser.getBrowser(), this.piano);
         this.getChildren().removeAll(this.pianoView, this.playlist, this.mixer);
 
         this.getChildren().addAll(this.pianoView);
